@@ -1,0 +1,21 @@
+﻿@page "/"
+
+@using Telerik.ReportViewer.Blazor
+
+<style>
+    #rv1 {
+        position: relative;
+        width: 1200px;
+        height: 600px;
+    }
+</style>
+
+<ReportViewer ViewerId="rv1"
+              ServiceUrl="http://apiservice/reports"
+              ReportSource="@(new ReportSourceOptions
+                            {
+                                Report = "Barcodes Report.trdp"
+                            })"
+              ScaleMode="@(ScaleMode.Specific)"
+              Scale="1.0" />
+              
