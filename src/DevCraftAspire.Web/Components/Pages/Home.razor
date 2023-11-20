@@ -1,6 +1,7 @@
 ﻿@page "/"
 
-@using Telerik.ReportViewer.Blazor
+@* Blazor ReportViewer does not render *@
+@* @using Telerik.ReportViewer.Blazor
 
 <style>
     #rv1 {
@@ -11,11 +12,51 @@
 </style>
 
 <ReportViewer ViewerId="rv1"
-              ServiceUrl="http://apiservice/reports"
-              ReportSource="@(new ReportSourceOptions
-                            {
-                                Report = "Barcodes Report.trdp"
-                            })"
+              ServiceUrl="@ApiServiceUrl"
+              ReportSource="@MyReportSource"
               ScaleMode="@(ScaleMode.Specific)"
-              Scale="1.0" />
-              
+              Scale="1.0" /> *@
+
+@* HTML5 ReportViewer is fine *@
+<style type="text/css">
+    #reportViewer1 {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 50px;
+        bottom: 5px;
+        overflow: hidden;
+        font-family: Verdana, Arial;
+    }
+</style>
+
+<div id="reportViewer1">
+    loading report viewer...
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#reportViewer1").telerik_ReportViewer({
+            serviceUrl: "http://localhost:5423/reports",
+            reportSource: {
+                report: "Barcodes Report.trdp"
+            },
+            viewMode: telerikReportViewer.ViewModes.INTERACTIVE,
+            scaleMode: telerikReportViewer.ScaleModes.SPECIFIC,
+            scale: 1.0,
+            enableAccessibility: false,
+            sendEmail: { enabled: false }
+        });
+    });
+</script>
+
+@code {
+    public string ApiServiceUrl { get; set; } = "http://localhost:5423/reports";
+
+    public ReportSourceOptions MyReportSource { get; set; } = new() { Report = "Barcodes Report.trdp" };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+}

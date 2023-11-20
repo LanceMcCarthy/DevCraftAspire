@@ -10,14 +10,17 @@
     <link rel="stylesheet" href="DevCraftAspire.Web.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.3.1114/js/jszip.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.3.1114/js/kendo.all.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2023.3.1114/js/kendo.aspnetmvc.min.js"></script>
 
     @* Problem, 'apiservice' named endpoint doesn't work here
     <script src="http://apiservice/reports/resources/js/telerikReportViewer"></script> *@
 
     @* I tried this too *@
     @* <script src="@((MarkupString)script)"></script> *@
-    
+
     @* Hardcoded workaround *@
     <script src="http://localhost:5423/reports/resources/js/telerikReportViewer"></script>
 
@@ -27,9 +30,9 @@
 </head>
 
 <body>
-<Routes />
-<script src="_framework/blazor.web.js"></script>
-<script src="_content/Telerik.ReportViewer.Blazor/interop.js" defer></script>
+    <Routes />
+    <script src="_framework/blazor.web.js"></script>
+    <script src="_content/Telerik.ReportViewer.Blazor/interop.js" defer></script>
 </body>
 
 </html>
