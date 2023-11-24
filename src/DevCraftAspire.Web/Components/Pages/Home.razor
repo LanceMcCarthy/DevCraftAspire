@@ -1,30 +1,47 @@
 ﻿@page "/"
 @using Telerik.ReportViewer.Blazor
 
-@* Helps the ReportViewer prerender and be ready for launch *@
+@* Important: prerender the ReportViewer *@
 @rendermode InteractiveServer
 
-<style>
+@inject ReportsApiClient ReportsApi
+
+@* <style>
     #rv1 {
         position: relative;
         width: 1200px;
         height: 600px;
     }
-</style>
+</style> *@
 
-<ReportViewer ViewerId="rv1"
+<ReportViewer @ref="ReportViewer1"
+              ViewerId="rv1"
               ServiceUrl="@ApiServiceUrl"
               ReportSource="@MyReportSource"
               ScaleMode="@(ScaleMode.Specific)"
               Scale="1.0" />
 
 @code {
-    public string ApiServiceUrl { get; set; } = "http://localhost:5423/reports";
+    private ReportViewer? ReportViewer1 { get; set; }
+    private string ApiServiceUrl { get; set; } = "http://localhost:5423/reports";
+    private ReportSourceOptions MyReportSource { get; set; } = new() { Report = "Barcodes Report.trdp" };
 
-    public ReportSourceOptions MyReportSource { get; set; } = new() { Report = "Barcodes Report.trdp" };
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        // EXPERIMENTATION - Trying to dynamically get the host URL
+
+        // Unfortunately, even getting the host here is still the named endpoint 'http://apiservice' and not the real value.
+        Console.WriteLine($"Base URL is: {ReportsApi.ServiceHttpClient.BaseAddress}");
+
+        // ApiServiceUrl = ReportsApi.ServiceHttpClient.BaseAddress + "/reports";
+
+        // await reportViewer1.RefreshReportAsync();
     }
 }
