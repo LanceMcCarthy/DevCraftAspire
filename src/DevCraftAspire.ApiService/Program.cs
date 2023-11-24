@@ -1,6 +1,5 @@
 using DevCraftAspire.ApiService.Models;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Buffers;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
 
@@ -13,7 +12,7 @@ builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers(opts => { })
-    .AddNewtonsoftJson(opts => { }) // ReportsController uses Newtonsoft.Json
+    .AddNewtonsoftJson(opts => { }) // Note: ReportsController requires Newtonsoft.Json for v2023.x
     .AddJsonOptions(opts => { });
 
 builder.Services.AddCors(corsOption => corsOption
@@ -46,29 +45,6 @@ app.UseExceptionHandler();
 app.UseStaticFiles();
 app.MapControllers();
 app.UseCors("ReportingRestPolicy");
-
-
-// One-off Get API for Weather service
-app.MapGet("/weatherforecast", () =>
-{
-    var summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-    var forecast = Enumerable.Range(1, 5).Select(index => 
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-
-    return forecast;
-});
-
-
 
 app.MapDefaultEndpoints();
 
