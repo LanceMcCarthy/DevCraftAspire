@@ -2,29 +2,30 @@
 @using Telerik.ReportViewer.Blazor
 
 @* Important: prerender the ReportViewer *@
-@rendermode InteractiveServer
-
+@* @rendermode InteractiveServer
+ *@
 @inject ReportsApiClient ReportsApi
 
-@* <style>
+<style>
     #rv1 {
         position: relative;
         width: 1200px;
         height: 600px;
     }
-</style> *@
+</style>
 
-<ReportViewer @ref="ReportViewer1"
+<Telerik.ReportViewer.Blazor.ReportViewer @ref="ReportViewer1"
               ViewerId="rv1"
               ServiceUrl="@ApiServiceUrl"
               ReportSource="@MyReportSource"
-              ScaleMode="@(ScaleMode.Specific)"
+              ScaleMode="@(ScaleMode)"
               Scale="1.0" />
 
 @code {
-    private ReportViewer? ReportViewer1 { get; set; }
+    private Telerik.ReportViewer.Blazor.ReportViewer? ReportViewer1 { get; set; }
     private string ApiServiceUrl { get; set; } = "http://localhost:5423/reports";
-    private ReportSourceOptions MyReportSource { get; set; } = new() { Report = "Barcodes Report.trdp" };
+    public Telerik.ReportViewer.Blazor.ScaleMode ScaleMode { get; set; } 
+    private Telerik.ReportViewer.Blazor.ReportSourceOptions MyReportSource { get; set; } = new() { Report = "Barcodes Report.trdp" };
 
     protected override async Task OnInitializedAsync()
     {

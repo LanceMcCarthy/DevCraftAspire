@@ -18,14 +18,20 @@
     @* Hardcoded workaround *@
     <script src="http://localhost:5423/reports/resources/js/telerikReportViewer"></script>
 
-    <link href="https://kendo.cdn.telerik.com/themes/7.0.2/default/default-main.css" rel="stylesheet" />
+    <link href="https://kendo.cdn.telerik.com/themes/7.0.2/default/default-main.css" rel="stylesheet" /> 
 
     <HeadOutlet />
+
+    <link rel="stylesheet" href="_content/Telerik.UI.for.Blazor/css/kendo-theme-default/all.css" />
+    <link rel="stylesheet" href="_content/Telerik.UI.for.Blazor/css/kendo-theme-default/all.css" />
+    <link href="_content/Telerik.ReportViewer.BlazorNative/css/reporting-blazor-viewer.css" rel="stylesheet" />
 </head>
 
 <body>
     <Routes @rendermode="@RenderMode.InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
+    <script src="_content/Telerik.UI.for.Blazor/js/telerik-blazor.js"></script>
+    <script src="_content/Telerik.ReportViewer.BlazorNative/js/reporting-blazor-viewer.js"></script>
     <script src="_content/Telerik.ReportViewer.Blazor/interop.js" defer></script>
 </body>
 

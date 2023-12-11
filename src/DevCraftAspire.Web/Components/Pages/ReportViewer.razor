@@ -1,0 +1,46 @@
+﻿@page "/reportviewer"
+@using Telerik.ReportViewer.BlazorNative
+
+@* @rendermode InteractiveServer *@
+
+<PageTitle>Report Viewer</PageTitle>
+
+<Telerik.ReportViewer.BlazorNative.ReportViewer ServiceUrl="@ApiServiceUrl"
+              @bind-ReportSource="@ReportSource"
+              @bind-ScaleMode="@ScaleMode"
+              @bind-ViewMode="@ViewMode"
+              @bind-ParametersAreaVisible="@ParametersAreaVisible"
+              @bind-DocumentMapVisible="@DocumentMapVisible"
+              @bind-Scale="@Scale"
+              PageMode="@PageMode.ContinuousScroll"
+              PrintMode="@PrintMode.AutoSelect"
+              KeepClientAlive="true"
+              EnableSendEmail="true"
+              ServiceType="@ReportViewerServiceType.REST"
+              Height="900px"
+              Width="100%">
+    <ReportViewerSettings>
+        <SendEmailDialogSettings From="from@example.com"
+                                 To="to@example.com"
+                                 Cc="cc@example.com"
+                                 Subject="Report sent"
+                                 Format="CSV"
+                                 Body="Attached report. <br/> <br/> Best regards, </br> ABC">
+        </SendEmailDialogSettings>
+    </ReportViewerSettings>
+</Telerik.ReportViewer.BlazorNative.ReportViewer>
+
+@code {
+    private string ApiServiceUrl { get; set; } = "http://localhost:5423/reports";
+    public ScaleMode ScaleMode { get; set; } = ScaleMode.Specific;
+    public ViewMode ViewMode { get; set; } = ViewMode.Interactive;
+    public bool ParametersAreaVisible { get; set; }
+    public bool DocumentMapVisible { get; set; }
+    public double Scale { get; set; } = 1.0;
+
+    public ReportSourceOptions ReportSource { get; set; } = new ReportSourceOptions("Barcodes Report.trdp", new Dictionary<string, object>
+    {
+        // Add parameters if applicable
+    });
+    
+}
