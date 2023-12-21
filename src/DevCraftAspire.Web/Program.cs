@@ -1,4 +1,4 @@
-using DevCraftAspire.Web;
+using DevCraftAspire.Web.Clients;
 using DevCraftAspire.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,14 +8,10 @@ builder.AddServiceDefaults();
 builder.AddRedisOutputCache("cache");
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.Services.AddHttpClient<WeatherApiClient>(client=> client.BaseAddress = new("http://apiservice"));
 builder.Services.AddHttpClient<ReportsApiClient>(client=> client.BaseAddress = new("http://apiservice"));
-
-
 
 var app = builder.Build();
 
@@ -25,14 +21,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
-
 app.UseAntiforgery();
-
 app.UseOutputCache();
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-    
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 app.MapDefaultEndpoints();
 
 app.Run();
