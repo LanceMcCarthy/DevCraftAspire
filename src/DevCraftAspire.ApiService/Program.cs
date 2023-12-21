@@ -1,4 +1,3 @@
-using DevCraftAspire.ApiService.Models;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
@@ -16,7 +15,10 @@ builder.Services.AddControllers(opts => { })
     .AddJsonOptions(opts => { });
 
 builder.Services.AddCors(corsOption => corsOption
-    .AddPolicy("ReportingRestPolicy", corsBuilder => corsBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    .AddPolicy("ReportingRestPolicy", corsBuilder => corsBuilder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
 ));
 
 builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>

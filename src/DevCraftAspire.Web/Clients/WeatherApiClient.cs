@@ -1,4 +1,6 @@
-namespace DevCraftAspire.Web;
+using DevCraftAspire.Web.Models;
+
+namespace DevCraftAspire.Web.Clients;
 
 public class WeatherApiClient(HttpClient httpClient)
 {
@@ -6,9 +8,4 @@ public class WeatherApiClient(HttpClient httpClient)
     {
         return await httpClient.GetFromJsonAsync<WeatherForecast[]>("/weatherforecast") ?? [];
     }
-}
-
-public record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }

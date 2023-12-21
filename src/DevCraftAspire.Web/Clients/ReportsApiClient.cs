@@ -1,4 +1,4 @@
-namespace DevCraftAspire.Web;
+namespace DevCraftAspire.Web.Clients;
 
 public class ReportsApiClient(HttpClient httpClient)
 {
