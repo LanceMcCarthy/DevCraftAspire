@@ -13,8 +13,8 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.0-preview.2.23619.3" />
-    <PackageReference Include="Telerik.ReportViewer.Blazor" Version="17.2.23.1114" />
-    <PackageReference Include="Telerik.UI.for.Blazor" Version="5.0.0" />
+    <PackageReference Include="Telerik.ReportViewer.Blazor" Version="18.0.24.130" />
+    <PackageReference Include="Telerik.UI.for.Blazor" Version="5.1.0" />
   </ItemGroup>
   
 </Project>
