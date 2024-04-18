@@ -11,7 +11,7 @@ builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers(opts => { })
-    .AddNewtonsoftJson(opts => { }) // Note: ReportsController requires Newtonsoft.Json for v2023.x
+    .AddNewtonsoftJson(opts => { }) // Note: for ReportsController
     .AddJsonOptions(opts => { });
 
 builder.Services.AddCors(corsOption => corsOption

@@ -1,8 +1,6 @@
-using Aspire.Hosting;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
-var cache = builder.AddRedisContainer("cache");
+var cache = builder.AddRedis("cache");
 
 var apiService = builder.AddProject<Projects.DevCraftAspire_ApiService>("apiservice");
 
