@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Telerik.Reporting.OpenXmlRendering" Version="18.0.24.130" />
-    <PackageReference Include="Telerik.Reporting.Services.AspNetCore" Version="18.0.24.130" />
+    <PackageReference Include="Telerik.Reporting.OpenXmlRendering" Version="18.0.24.305" />
+    <PackageReference Include="Telerik.Reporting.Services.AspNetCore" Version="18.0.24.305" />
   </ItemGroup>
 
   <ItemGroup>

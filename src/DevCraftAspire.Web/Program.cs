@@ -10,6 +10,7 @@ builder.AddRedisOutputCache("cache");
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
+// Note, you can use "https+http://apiservice" to denote https preference, see https://aka.ms/dotnet/sdschemes.
 builder.Services.AddHttpClient<WeatherApiClient>(client=> client.BaseAddress = new("http://apiservice"));
 builder.Services.AddHttpClient<ReportsApiClient>(client=> client.BaseAddress = new("http://apiservice"));
 
