@@ -1,0 +1,30 @@
+name: "Build AppHost"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NUGET_CONF_PATH: './nuget.config'
+      PROJECT_PATH: './DevCraftAspire.AppHost/DevCraftAspire.AppHost.csproj'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Update NuGet Package Sources
+      working-directory: 'src'
+      run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile {{env.NUGET_CONF_PATH}} --store-password-in-clear-text
+        
+    - name: Install .NET Aspire workload
+      working-directory: 'src'
+      run: dotnet workload install aspire
+
+    - name: Build code
+      working-directory: 'src'
+      run: |
+        dotnet restore {{env.PROJECT_PATH}} --configfile {{env.NUGET_CONF_PATH}}
+        dotnet build {{env.PROJECT_PATH}} -c Release
