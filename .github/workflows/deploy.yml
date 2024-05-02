@@ -17,7 +17,6 @@ jobs:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
       AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
     steps:
@@ -27,45 +26,11 @@ jobs:
     - name: Install azd
       uses: Azure/setup-azd@v0.1.0
 
-    - name: Get AAD Secret
-      id: aad-secret
-      uses: LanceMcCarthy/akeyless-aad-secret@v1
-      with:
-        akeyless-secret-path: '/DevTools/live-azure-ad'
-        akeyless-access-id: '${{ secrets.AKEYLESS_ACCESS_ID }}'
-        akeyless-access-key: '${{ secrets.AKEYLESS_ACCESS_KEY }}'
-
-    - name: Verify Output
-      shell: pwsh
-      run: |
-        echo "${{steps.aad-secret.outputs.app-id}}"
-        echo "${{steps.aad-secret.outputs.tenant-id }}"
-        echo "::add-mask::${{steps.aad-secret.outputs.secret-text}}"
-        echo "${{steps.aad-secret.outputs.key-id}}"
-        echo "${{steps.aad-secret.outputs.display-name}}"
-
-    - name: Log in with Azure (using Akeyless Dynamic Secret)
+    - name: Log in with Azure (Federated Credentials)
       working-directory: 'src'
-      run: azd auth login --client-id "${{steps.aad-secret.outputs.app-id}}" --client-secret "${{steps.aad-secret.outputs.secret-text}}" --tenant-id "${{steps.aad-secret.outputs.tenant-id}}"
+      if: ${{ env.AZURE_CLIENT_ID != '' }}
+      run: azd auth login --client-id "${{env.AZURE_CLIENT_ID}}" --tenant-id "${{env.AZURE_TENANT_ID}}" --federated-credential-provider "github"
       shell: pwsh
-
-    # - name: Log in with Azure (Federated Credentials)
-    #   working-directory: 'src'
-    #   if: ${{ env.AZURE_CLIENT_ID != '' }}
-    #   run: azd auth login --client-id "${{env.AZURE_CLIENT_ID}}" --tenant-id "${{env.AZURE_TENANT_ID}}" --federated-credential-provider "github"
-    #   shell: pwsh
-
-    # - name: Log in with Azure (Client Credentials)
-    #   working-directory: 'src'
-    #   if: ${{ env.AZURE_CREDENTIALS != '' }}
-    #   run: |
-    #     $info = ${{ env.AZURE_CREDENTIALS }} | ConvertFrom-Json -AsHashtable;
-    #     azd auth login --client-id "$($info.clientId)" --client-secret "$($info.clientSecret)" --tenant-id "$($info.tenantId)"
-    #   shell: pwsh
-
-    - name: Provision Infrastructure
-      working-directory: 'src'
-      run: azd provision --no-prompt
 
     - name: Update NuGet Package Sources
       working-directory: 'src'
@@ -80,6 +45,10 @@ jobs:
       run: |
         dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
         dotnet build -c Release --no-restore
+
+    - name: Provision Infrastructure
+      working-directory: 'src'
+      run: azd provision --no-prompt
 
     - name: Deploy Application
       working-directory: 'src'
