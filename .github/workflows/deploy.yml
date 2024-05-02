@@ -6,7 +6,7 @@ on:
       - "releases/*"
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
     env:
       NUGET_CONF_PATH: './nuget.config'
@@ -18,28 +18,25 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      
-    - name: Install azd
-      uses: Azure/setup-azd@v0.1.0
 
     - name: Install .NET Aspire workload
       working-directory: 'src'
       run: dotnet workload install aspire
 
+    - name: Build Code
+      working-directory: 'src'
+      run: |
+        dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
+        dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
+        dotnet build -c Release --no-restore
+      
+    - name: Install azd
+      uses: Azure/setup-azd@v0.1.0
+
     - name: Log in with Azure (Client Credentials)
       working-directory: 'src'
       run: azd auth login --client-id "${{env.AZURE_CLIENT_ID}}" --client-secret "${{secrets.AZURE_CLIENT_SECRET}}" --tenant-id "${{env.AZURE_TENANT_ID}}"
       shell: pwsh
-
-    - name: Update NuGet Package Sources
-      working-directory: 'src'
-      run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
-
-    - name: Build AppHost Project
-      working-directory: 'src'
-      run: |
-        dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
-        dotnet build -c Release --no-restore
 
     - name: Provision Infrastructure
       working-directory: 'src'
