@@ -17,6 +17,7 @@ jobs:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
       AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
     steps:
@@ -48,9 +49,9 @@ jobs:
 
     - name: Log in with Azure (Client Credentials)
       working-directory: 'src'
-      if: ${{ secrets.AZURE_CREDENTIALS != '' }}
+      if: ${{ env.AZURE_CREDENTIALS != '' }}
       run: |
-        $info = ${{ secrets.AZURE_CREDENTIALS }} | ConvertFrom-Json -AsHashtable;
+        $info = ${{ env.AZURE_CREDENTIALS }} | ConvertFrom-Json -AsHashtable;
         azd auth login --client-id "$($info.clientId)" --client-secret "$($info.clientSecret)" --tenant-id "$($info.tenantId)"
       shell: pwsh
 
