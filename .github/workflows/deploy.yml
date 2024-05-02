@@ -13,7 +13,6 @@ jobs:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      #AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
       AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
     steps:
@@ -32,10 +31,6 @@ jobs:
       run: azd auth login --client-id "${{env.AZURE_CLIENT_ID}}" --client-secret "${{secrets.AZURE_CLIENT_SECRET}}" --tenant-id "${{env.AZURE_TENANT_ID}}"
       shell: pwsh
 
-    - name: Provision Infrastructure
-      working-directory: 'src'
-      run: azd provision --no-prompt
-
     - name: Update NuGet Package Sources
       working-directory: 'src'
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
@@ -46,6 +41,10 @@ jobs:
         dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
         dotnet build -c Release --no-restore
 
+    - name: Provision Infrastructure
+      working-directory: 'src'
+      run: azd provision --no-prompt --environment "devcraft-aspire"
+
     - name: Deploy Application
       working-directory: 'src'
-      run: azd deploy --no-prompt
+      run: azd deploy --no-prompt --environment "devcraft-aspire"
