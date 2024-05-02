@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NUGET_CONF_PATH: './nuget.config'
-      PROJECT_PATH: './DevCraftAspire.AppHost/DevCraftAspire.AppHost.csproj'
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -26,5 +25,5 @@ jobs:
     - name: Build code
       working-directory: 'src'
       run: |
-        dotnet restore {{env.PROJECT_PATH}} --configfile {{env.NUGET_CONF_PATH}}
-        dotnet build {{env.PROJECT_PATH}} -c Release
+        dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
+        dotnet build -c Release --no-restore
