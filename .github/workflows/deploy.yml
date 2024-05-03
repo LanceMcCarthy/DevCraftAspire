@@ -17,7 +17,6 @@ jobs:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
       AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
     steps:
@@ -32,26 +31,12 @@ jobs:
 
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire
+      
+    - name: Install azd
+      uses: Azure/setup-azd@v0.1.0
 
-    - name: Log in with Azure (Federated Credentials)
-      if: ${{ env.AZURE_CLIENT_ID != '' }}
-      run: |
-        azd auth login `
-          --client-id "$Env:AZURE_CLIENT_ID" `
-          --federated-credential-provider "github" `
-          --tenant-id "$Env:AZURE_TENANT_ID"
-      shell: pwsh
-
-    - name: Log in with Azure (Client Credentials)
-      if: ${{ env.AZURE_CREDENTIALS != '' }}
-      run: |
-        $info = $Env:AZURE_CREDENTIALS | ConvertFrom-Json -AsHashtable;
-        Write-Host "::add-mask::$($info.clientSecret)"
-
-        azd auth login `
-          --client-id "$($info.clientId)" `
-          --client-secret "$($info.clientSecret)" `
-          --tenant-id "$($info.tenantId)"
+    - name: Log into Azure with GitHub Federated Credentials (OpenID)
+      run: azd auth login --client-id "$Env:AZURE_CLIENT_ID" --tenant-id "$Env:AZURE_TENANT_ID" --federated-credential-provider "github"
       shell: pwsh
 
     - name: Provision Infrastructure
