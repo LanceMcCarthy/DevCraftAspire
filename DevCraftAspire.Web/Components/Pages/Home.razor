@@ -23,8 +23,15 @@
               Scale="1.0" />
 
 @code {
-    private ReportViewer? ReportViewer1 { get; set; }
+#if DEBUG
+    // Unfortunately, 'http://apiservice' does not work here
     private string ApiServiceUrl { get; set; } = "http://localhost:5423/reports";
+#else
+    // This is not a long term solution, the domain will change
+    private string ApiServiceUrl { get; set; } = "https://apiservice.internal.purpledune-16458cf6.eastus2.azurecontainerapps.io/reports";
+#endif
+
+    private ReportViewer? ReportViewer1 { get; set; }
     private ReportSourceOptions MyReportSource { get; set; } = new() { Report = "Barcodes Report.trdp" };
 
     protected override async Task OnInitializedAsync()
@@ -36,7 +43,7 @@
     {
         await base.OnAfterRenderAsync(firstRender);
 
-        // EXPERIMENTATION - Trying to dynamically get the host URL
+        // EXPERIMENTATION - Trying to dynamically get the real URL for the ApiService container
 
         // Unfortunately, even getting the host here is still the named endpoint 'http://apiservice' and not the real value.
         Console.WriteLine($"Base URL is: {ReportsApi.ServiceHttpClient.BaseAddress}");
