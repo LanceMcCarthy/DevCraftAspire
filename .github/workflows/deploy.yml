@@ -5,6 +5,10 @@ on:
     branches:
       - "releases/*"
 
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -13,35 +17,45 @@ jobs:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
       AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Install .NET Aspire workload
-      working-directory: 'src'
-      run: dotnet workload install aspire
-
-    - name: Build Code
-      working-directory: 'src'
-      run: |
-        dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
-        dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
-        dotnet build -c Release --no-restore
-      
+    - name: Update NuGet Package Sources
+      run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
+        
     - name: Install azd
       uses: Azure/setup-azd@v0.1.0
 
+    - name: Install .NET Aspire workload
+      run: dotnet workload install aspire
+
+    - name: Log in with Azure (Federated Credentials)
+      if: ${{ env.AZURE_CLIENT_ID != '' }}
+      run: |
+        azd auth login `
+          --client-id "$Env:AZURE_CLIENT_ID" `
+          --federated-credential-provider "github" `
+          --tenant-id "$Env:AZURE_TENANT_ID"
+      shell: pwsh
+
     - name: Log in with Azure (Client Credentials)
-      working-directory: 'src'
-      run: azd auth login --client-id "${{env.AZURE_CLIENT_ID}}" --client-secret "${{secrets.AZURE_CLIENT_SECRET}}" --tenant-id "${{env.AZURE_TENANT_ID}}"
+      if: ${{ env.AZURE_CREDENTIALS != '' }}
+      run: |
+        $info = $Env:AZURE_CREDENTIALS | ConvertFrom-Json -AsHashtable;
+        Write-Host "::add-mask::$($info.clientSecret)"
+
+        azd auth login `
+          --client-id "$($info.clientId)" `
+          --client-secret "$($info.clientSecret)" `
+          --tenant-id "$($info.tenantId)"
       shell: pwsh
 
     - name: Provision Infrastructure
-      working-directory: 'src'
-      run: azd provision --no-prompt --environment "devcraft-aspire"
+      run: azd provision --no-prompt --environment "aspire2b"
 
     - name: Deploy Application
-      working-directory: 'src'
-      run: azd deploy --no-prompt --environment "devcraft-aspire"
+      run: azd deploy --no-prompt --environment "aspire2b"
