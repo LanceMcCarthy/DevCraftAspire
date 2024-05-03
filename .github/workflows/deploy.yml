@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "releases/*"
+      - release
 
 permissions:
   id-token: write
