@@ -12,12 +12,23 @@
     <link href="https://kendo.cdn.telerik.com/themes/7.0.2/default/default-main.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    
+    <environment include="Development">
+        <script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
+    </environment>
 
-    @* ISSUE: The 'apiservice' named endpoint doesn't work here
-    <script src="http://apiservice/reports/resources/js/telerikReportViewer"></script> *@
+    <environment include="Staging,Production">
+        @*  Should resolve to https://apiservice.purpledune-16458cf6.eastus2.azurecontainerapps.io/reports/resources/js/telerikReportViewer in Azure *@
+        <script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
+    </environment>
 
-    @* WORKAROUND: Hardcoded workaround*@
-    <script src="http://localhost:5423/reports/resources/js/telerikReportViewer"></script>
+    <style>
+        #rv1 {
+            position: relative;
+            width: 800px;
+            height: 1200px;
+        }
+    </style>
 
     <HeadOutlet />
 </head>

@@ -5,12 +5,17 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:17157;http://localhost:15078",
+      "applicationUrl": "https://localhost:17157",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21272",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22198"
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22198",
+        "Dashboard:Frontend:AuthMode": "BrowserToken",
+        "Dashboard:Frontend:BrowserToken": "5Tyt4NIo3ZAYfcmYK98zmw==",
+        "Dashboard:Otlp:AuthMode": "ApiKey",
+        "Dashboard:Otlp:PrimaryApiKey": "R45TAjj84PBYO1PtCKM5cA==",
+        "REPORTING_REST_SERVICE_URL": "https://localhost:7443"
       }
     },
     "http": {
@@ -22,7 +27,11 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19188",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20263"
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20263",
+        "Dashboard:Frontend:AuthMode": "BrowserToken",
+        "Dashboard:Frontend:BrowserToken": "5Tyt4NIo3ZAYfcmYK98zmw==",
+        "Dashboard:Otlp:AuthMode": "ApiKey",
+        "Dashboard:Otlp:PrimaryApiKey": "R45TAjj84PBYO1PtCKM5cA=="
       }
     }
   }

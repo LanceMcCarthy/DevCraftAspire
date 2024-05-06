@@ -4,31 +4,30 @@ using Telerik.Reporting.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add service defaults & Aspire components.
+// Comes from ServiceDefaults project's extensions
 builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
 
+// For Telerik Reporting REST service (ReportsController uses jsonNet)
 builder.Services.AddControllers(opts => { })
-    .AddNewtonsoftJson(opts => { }) // Note: for ReportsController
+    .AddNewtonsoftJson(opts => { })
     .AddJsonOptions(opts => { });
 
-builder.Services.AddCors(corsOption => corsOption
-    .AddPolicy("ReportingRestPolicy", corsBuilder => corsBuilder
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-));
+// CORs policy to allow the ReportViewer in the front-end project to use the REST API in a different domain
+builder.Services.AddCors(corsOption => corsOption.AddPolicy("ReportingRestPolicy", corsBuilder => corsBuilder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader()));
 
+// Reporting setup, with a Uri resolver
 builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
 {
     var rootPath = sp.GetService<IWebHostEnvironment>()?.ContentRootPath;
 
     if (string.IsNullOrEmpty(rootPath))
-    {
         rootPath = "./";
-    }
 
     return new ReportServiceConfiguration
     {
@@ -41,7 +40,6 @@ builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 
 app.UseStaticFiles();
