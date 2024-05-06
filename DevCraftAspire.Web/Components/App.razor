@@ -13,15 +13,17 @@
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     
+    @* didnt work
+        
     <environment include="Development">
         <script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
     </environment>
 
     <environment include="Staging,Production">
-        @*  Should resolve to https://apiservice.purpledune-16458cf6.eastus2.azurecontainerapps.io/reports/resources/js/telerikReportViewer in Azure *@
         <script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
-    </environment>
-
+    </environment> 
+    *@
+    
     <style>
         #rv1 {
             position: relative;
