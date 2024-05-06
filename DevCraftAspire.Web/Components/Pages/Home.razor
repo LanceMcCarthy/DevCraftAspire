@@ -1,20 +1,14 @@
 ﻿@page "/"
 @using Telerik.ReportViewer.Blazor
 @using DevCraftAspire.Web.Clients
+@inject ReportsApiClient ReportsApi
 
 @* Important: prerender the ReportViewer *@
 @rendermode InteractiveServer
 
-@inject ReportsApiClient ReportsApi
 
-<style>
-    #rv1 {
-        position: relative;
-        width: 1200px;
-        height: 800px;
-    }
-</style>
 
+@* Important: Viewer's resources are loaded in App.razor *@
 <ReportViewer @ref="ReportViewer1"
               ViewerId="rv1"
               ServiceUrl="@ApiServiceUrl"
@@ -24,11 +18,11 @@
 
 @code {
 #if DEBUG
-    // Unfortunately, 'http://apiservice' does not work here
-    private string ApiServiceUrl { get; set; } = "http://localhost:5423/reports";
-#else
-    // This is not a long term solution, the domain will change
-    private string ApiServiceUrl { get; set; } = "https://apiservice.internal.purpledune-16458cf6.eastus2.azurecontainerapps.io/reports";
+    // Dev environment hack
+    private string ApiServiceUrl { get; } = "https://localhost:7443/reports";
+#elif RELEASE
+    // Production hack uses https://apiservice.purpledune-16458cf6.eastus2.azurecontainerapps.io
+    private string ApiServiceUrl { get; } = $"{Environment.GetEnvironmentVariable("services__apiservice__https__0")}/reports";
 #endif
 
     private ReportViewer? ReportViewer1 { get; set; }
@@ -42,14 +36,5 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-
-        // EXPERIMENTATION - Trying to dynamically get the real URL for the ApiService container
-
-        // Unfortunately, even getting the host here is still the named endpoint 'http://apiservice' and not the real value.
-        Console.WriteLine($"Base URL is: {ReportsApi.ServiceHttpClient.BaseAddress}");
-
-        // ApiServiceUrl = ReportsApi.ServiceHttpClient.BaseAddress + "/reports";
-
-        // await reportViewer1.RefreshReportAsync();
     }
 }
