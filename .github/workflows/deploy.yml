@@ -25,15 +25,12 @@ jobs:
 
     - name: Update NuGet Package Sources
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
-        
-    - name: Install azd
-      uses: Azure/setup-azd@v0.1.0
 
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire
       
     - name: Install azd
-      uses: Azure/setup-azd@v0.1.0
+      uses: Azure/setup-azd@v1.0.0
 
     - name: Log into Azure with GitHub Federated Credentials (OpenID)
       run: azd auth login --client-id "$Env:AZURE_CLIENT_ID" --tenant-id "$Env:AZURE_TENANT_ID" --federated-credential-provider "github"
