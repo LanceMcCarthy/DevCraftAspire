@@ -21,3 +21,4 @@ jobs:
         with:
           target-image-name: 'docker.io/lancemccarthy/aspirebase:8.0'
           dockerfile: '.dockerbuilds/baseimage/Dockerfile'
+          base-stage-name: base
