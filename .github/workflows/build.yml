@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '.github/**/*'
+      - '.dockerbuilds/**/*'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+      - 'azure.yaml'
+      - 'global.json'
+      - 'nuget.config'
 
 jobs:
   build_app:
