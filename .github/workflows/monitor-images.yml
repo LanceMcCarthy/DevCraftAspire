@@ -19,6 +19,5 @@ jobs:
 
       - uses: mthalman/docker-bump-action@v0
         with:
-          target-image-name: 'docker.io/lancemccarthy/aspirebase:8.0'
-          dockerfile: '.dockerbuilds/baseimage/Dockerfile'
-          base-stage-name: base
+          base-image-name: 'mcr.microsoft.com/dotnet/aspnet:8.0'
+          target-image-name: 'ghcr.io/lancemccarthy/aspirebase:8.0'
