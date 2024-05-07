@@ -2,16 +2,13 @@ name: "Monitor .NET 8.0 Base Image"
 on:
   workflow_dispatch:
   schedule: 
-  # sundays at midnight
-  - cron: "0 0 * * 0" 
-
-# needed to trigger 'base-image-update' repository_dispatch (starts other workflows)
-permissions:
-  contents: write
+  - cron: "0 0 * * 0" # sundays at midnight
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # needed to trigger repository_dispatch
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,6 +16,5 @@ jobs:
 
       - uses: mthalman/docker-bump-action@v0
         with:
-          target-image-name: 'docker.io/lancemccarthy/aspirebase:8.0'
-          dockerfile: '.dockerbuilds/baseimage/Dockerfile'
-          base-stage-name: base
+          base-image-name: 'mcr.microsoft.com/dotnet/aspnet:8.0'
+          target-image-name: 'ghcr.io/lancemccarthy/aspirebase:8.0'
