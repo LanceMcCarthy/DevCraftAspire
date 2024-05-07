@@ -1,4 +1,4 @@
-name: "Build AppHost"
+name: "Build Main"
 on:
   workflow_dispatch:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_app:
     runs-on: ubuntu-latest
     env:
       NUGET_CONF_PATH: './nuget.config'
