@@ -4,15 +4,11 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - '.github/**/*'
-      - '.dockerbuilds/**/*'
-      - '.gitignore'
-      - 'LICENSE'
-      - 'README.md'
-      - 'azure.yaml'
-      - 'global.json'
-      - 'nuget.config'
+    paths:
+      - 'DevCraftAspire.ApiService/**/*'
+      - 'DevCraftAspire.AppHost/**/*'
+      - 'DevCraftAspire.ServiceDefaults/**/*'
+      - 'DevCraftAspire.Web/**/*'
 
 jobs:
   build_app:
