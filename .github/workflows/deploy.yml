@@ -10,7 +10,8 @@ permissions:
   contents: read
   
 jobs:
-  build_base_image:
+  # Build a custom base image with needed Linux dependencies installed
+  custom_base_image:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -45,9 +46,11 @@ jobs:
         tags: |
           lancemccarthy/aspirebase:8.0
 
-
-  build_and_deploy:
-    needs: [build_base_image]
+  # Once new base image is published to DockerHub, we can build and publish the .NET Aspire projects
+  # - The ApiService project needs the custom base image, defined as ContainerBaseImage in the csproj
+  # - The rest can use the default mcr.microsoft.com/dotnet/aspnet:8.0 image
+  deploy_app:
+    needs: [custom_base_image]
     runs-on: ubuntu-latest
     env:
       NUGET_CONF_PATH: './nuget.config'
