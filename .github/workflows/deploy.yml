@@ -11,40 +11,39 @@ on:
       - 'DevCraftAspire.Web/**/*'
   
 jobs:
-  # Build a custom base image with needed Linux dependencies installed (being done on a weekly schedule now)
-  # COMMENTED TEMPORARILY FOR TEST
-  # update_base_image:
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v4
-  #     with:
-  #       fetch-depth: 0
+  # Build a custom base image with needed Linux dependencies preinstalled
+  update_base_image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-  #   - name: Set up QEMU
-  #     uses: docker/setup-qemu-action@v3
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
 
-  #   - name: Set up Docker Buildx
-  #     uses: docker/setup-buildx-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
       
-  #   - name: Login to ghcr.io
-  #     uses: docker/login-action@v3
-  #     with:
-  #       registry: ghcr.io
-  #       username: ${{github.actor}}
-  #       password: ${{secrets.GITHUB_TOKEN}}
+    - name: Login to ghcr.io
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
 
-  #   - name: Build and push to Github image repository
-  #     uses: docker/build-push-action@v5
-  #     with:
-  #       context: '.dockerbuilds/baseimage'
-  #       platforms: linux/arm64,linux/amd64
-  #       push: true
-  #       tags: |
-  #         "ghcr.io/lancemccarthy/aspirebase:8.0"
+    - name: Build and push to Github image repository
+      uses: docker/build-push-action@v5
+      with:
+        context: '.dockerbuilds/baseimage'
+        platforms: linux/arm64,linux/amd64
+        push: true
+        tags: |
+          "ghcr.io/lancemccarthy/aspirebase:8.0"
 
   # Once new base image is published, we can build the .NET Aspire projects
   # - The ApiService project needs the custom base image, defined as ContainerBaseImage in the csproj
@@ -78,29 +77,27 @@ jobs:
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
 
-    # - name: Update NuGet Package Sources
-    #   run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
+    - name: Update NuGet Package Sources
+      run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
 
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire --ignore-failed-sources
 
-    - name: Isolated build test
-      run: |
-        dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
-        dotnet restore
-        dotnet build -c Release --no-restore
-        dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer --no-build --no-restore
+    # - name: BaseContainerImage Isolated Test
+    #   run: |
+    #     dotnet restore
+    #     dotnet build -c Release --no-restore
+    #     dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer --no-build --no-restore
 
-    # COMMENTED TEMPORARILY FOR TEST
-    # - name: Install azd
-    #   uses: Azure/setup-azd@v1.0.0
+    - name: Install azd
+      uses: Azure/setup-azd@v1.0.0
 
-    # - name: Log into Azure with GitHub Federated Credentials (OpenID)
-    #   run: azd auth login --client-id "$Env:AZURE_CLIENT_ID" --tenant-id "$Env:AZURE_TENANT_ID" --federated-credential-provider "github"
-    #   shell: pwsh
+    - name: Log into Azure with GitHub Federated Credentials (OpenID)
+      run: azd auth login --client-id "${{env.AZURE_CLIENT_ID}}" --tenant-id "${{env.AZURE_TENANT_ID}}" --federated-credential-provider "github"
+      shell: pwsh
 
-    # - name: Provision Infrastructure
-    #   run: azd provision --no-prompt --environment "aspire2b"
+    - name: Provision Infrastructure
+      run: azd provision --no-prompt --environment "aspire2b"
 
-    # - name: Deploy Application
-    #   run: azd deploy --no-prompt --environment "aspire2b"
+    - name: Deploy Application
+      run: azd deploy --no-prompt --environment "aspire2b"
