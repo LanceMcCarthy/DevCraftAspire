@@ -1,9 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <ContainerBaseImage>ghcr.io/lancemccarthy/aspirebase:8.0</ContainerBaseImage>
-    <ContainerRepository>lancemccarthy/aspireapiservice</ContainerRepository>
-    <ContainerRegistry>ghcr.io</ContainerRegistry>
+    <!--<ContainerBaseImage>ghcr.io/lancemccarthy/aspirebase:8.0</ContainerBaseImage>-->
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -29,5 +26,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>
