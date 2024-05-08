@@ -18,4 +18,3 @@ jobs:
         with:
           base-image-name: 'mcr.microsoft.com/dotnet/aspnet:8.0'
           target-image-name: 'ghcr.io/lancemccarthy/aspirebase:8.0'
-          token: ${{secrets.GITHUB_TOKEN}}
