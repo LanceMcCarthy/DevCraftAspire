@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
-# Pre-install dependencies for Skia fonts
-FROM base AS build
-RUN apt-get update
-RUN apt-get install libfreetype6 libfontconfig1 -y
+# Pre-install dependencies for Skia fonts, then clean up after myself
+RUN apt-get update \
+    && apt-get install libfreetype6 libfontconfig1 -y \
+    && apt-get autoremove \
+    && rm -rf /var/lib/apt/lists/*
