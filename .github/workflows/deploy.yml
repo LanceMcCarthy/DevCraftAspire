@@ -66,6 +66,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    # For azd deploy to pull base image defined in ApiService.csproj
+    - name: Login to ghcr.io
+      uses: azure/docker-login@v1
+      with:
+        login-server: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
     - name: Update NuGet Package Sources
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
 
