@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <ContainerBaseImage>ghcr.io/lancemccarthy/aspirebase:8.0</ContainerBaseImage>
+    <ContainerRepository>lancemccarthy/aspireapiservice</ContainerRepository>
+    <ContainerRegistry>ghcr.io</ContainerRegistry>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
