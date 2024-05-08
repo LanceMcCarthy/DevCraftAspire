@@ -67,6 +67,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Install .NET Aspire workload
+      run: dotnet nuget list source
+
     # For azd deploy to pull base image defined in ApiService.csproj
     - name: Login to ghcr.io
       uses: azure/docker-login@v1
@@ -79,12 +82,12 @@ jobs:
     #   run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
 
     - name: Install .NET Aspire workload
-      run: dotnet workload install aspire
+      run: dotnet workload install aspire --ignore-failed-sources
 
     - name: Isolated build test
       run: |
-        dotnet nuget add source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
-        dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
+        dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
+        dotnet restore
         dotnet build -c Release --no-restore
         dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer --no-build --no-restore
 
