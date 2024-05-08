@@ -12,44 +12,45 @@ on:
   
 jobs:
   # Build a custom base image with needed Linux dependencies installed (being done on a weekly schedule now)
-  update_base_image:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+  # COMMENTED TEMPORARILY FOR TEST
+  # update_base_image:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
+  #     with:
+  #       fetch-depth: 0
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
+  #   - name: Set up QEMU
+  #     uses: docker/setup-qemu-action@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+  #   - name: Set up Docker Buildx
+  #     uses: docker/setup-buildx-action@v3
       
-    - name: Login to ghcr.io
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
+  #   - name: Login to ghcr.io
+  #     uses: docker/login-action@v3
+  #     with:
+  #       registry: ghcr.io
+  #       username: ${{github.actor}}
+  #       password: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Build and push to Github image repository
-      uses: docker/build-push-action@v5
-      with:
-        context: '.dockerbuilds/baseimage'
-        platforms: linux/arm64,linux/amd64
-        push: true
-        tags: |
-          "ghcr.io/lancemccarthy/aspirebase:8.0"
+  #   - name: Build and push to Github image repository
+  #     uses: docker/build-push-action@v5
+  #     with:
+  #       context: '.dockerbuilds/baseimage'
+  #       platforms: linux/arm64,linux/amd64
+  #       push: true
+  #       tags: |
+  #         "ghcr.io/lancemccarthy/aspirebase:8.0"
 
   # Once new base image is published, we can build the .NET Aspire projects
   # - The ApiService project needs the custom base image, defined as ContainerBaseImage in the csproj
   # - The rest can use the default mcr.microsoft.com/dotnet/aspnet:8.0 image
   deploy_app:
-    needs: [update_base_image]
+    # needs: [update_base_image]
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -74,24 +75,29 @@ jobs:
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Test pull
-      run: docker image pull ghcr.io/lancemccarthy/aspirebase:8.0
-
-    - name: Update NuGet Package Sources
-      run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
+    # - name: Update NuGet Package Sources
+    #   run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
 
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire
-      
-    - name: Install azd
-      uses: Azure/setup-azd@v1.0.0
 
-    - name: Log into Azure with GitHub Federated Credentials (OpenID)
-      run: azd auth login --client-id "$Env:AZURE_CLIENT_ID" --tenant-id "$Env:AZURE_TENANT_ID" --federated-credential-provider "github"
-      shell: pwsh
+    - name: Isolated build test
+      run: |
+        dotnet nuget add source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
+        dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
+        dotnet build -c Release --no-restore
+        dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer --no-build --no-restore
 
-    - name: Provision Infrastructure
-      run: azd provision --no-prompt --environment "aspire2b"
+    # COMMENTED TEMPORARILY FOR TEST
+    # - name: Install azd
+    #   uses: Azure/setup-azd@v1.0.0
 
-    - name: Deploy Application
-      run: azd deploy --no-prompt --environment "aspire2b"
+    # - name: Log into Azure with GitHub Federated Credentials (OpenID)
+    #   run: azd auth login --client-id "$Env:AZURE_CLIENT_ID" --tenant-id "$Env:AZURE_TENANT_ID" --federated-credential-provider "github"
+    #   shell: pwsh
+
+    # - name: Provision Infrastructure
+    #   run: azd provision --no-prompt --environment "aspire2b"
+
+    # - name: Deploy Application
+    #   run: azd deploy --no-prompt --environment "aspire2b"
