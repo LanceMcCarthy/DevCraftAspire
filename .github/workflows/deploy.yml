@@ -1,4 +1,5 @@
 name: "Deploy to Azure"
+
 on:
   workflow_dispatch:
   push:
@@ -16,13 +17,15 @@ env:
   APP_IMAGE_NAME: lancemccarthy/aspireapiservice
   APP_IMAGE_TAG: "8.0"
 
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
 jobs:
   # Build a custom base image with needed Linux dependencies preinstalled
   update_base_image:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -34,7 +37,7 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-      
+
     - name: Login to ghcr.io
       uses: docker/login-action@v3
       with:
@@ -49,15 +52,11 @@ jobs:
         platforms: linux/arm64,linux/amd64
         push: true
         tags: |
-          "${{env.APP_IMAGE_NAME}}"
+          "${{env.BASE_IMAGE}}"
 
   deploy_app:
     needs: [update_base_image]
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-      packages: write
     env:
       NUGET_CONF_PATH: './nuget.config'
       AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
