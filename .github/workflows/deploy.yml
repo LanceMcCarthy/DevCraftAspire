@@ -9,7 +9,13 @@ on:
       - 'DevCraftAspire.AppHost/**/*'
       - 'DevCraftAspire.ServiceDefaults/**/*'
       - 'DevCraftAspire.Web/**/*'
-  
+
+env:
+  CONTAINER_REGISTRY: "ghcr.io"
+  BASE_IMAGE: "ghcr.io/lancemccarthy/aspirebase:8.0"
+  APP_IMAGE_NAME: lancemccarthy/aspireapiservice
+  APP_IMAGE_TAG: "8.0"
+
 jobs:
   # Build a custom base image with needed Linux dependencies preinstalled
   update_base_image:
@@ -32,7 +38,7 @@ jobs:
     - name: Login to ghcr.io
       uses: docker/login-action@v3
       with:
-        registry: ghcr.io
+        registry: ${{env.CONTAINER_REGISTRY}}
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
 
@@ -43,51 +49,49 @@ jobs:
         platforms: linux/arm64,linux/amd64
         push: true
         tags: |
-          "ghcr.io/lancemccarthy/aspirebase:8.0"
+          "${{env.APP_IMAGE_NAME}}"
 
-  # Once new base image is published, we can build the .NET Aspire projects
-  # - The ApiService project needs the custom base image, defined as ContainerBaseImage in the csproj
-  # - The rest can use the default mcr.microsoft.com/dotnet/aspnet:8.0 image
   deploy_app:
-    # needs: [update_base_image]
+    needs: [update_base_image]
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
-      packages: read
+      packages: write
     env:
       NUGET_CONF_PATH: './nuget.config'
-      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
-      AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+      AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
+      AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
+      AZURE_SUBSCRIPTION_ID: ${{vars.AZURE_SUBSCRIPTION_ID}}
+      AZURE_ENV_NAME: ${{vars.AZURE_ENV_NAME}}
+      AZURE_LOCATION: ${{vars.AZURE_LOCATION}}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
     - name: Install .NET Aspire workload
-      run: dotnet nuget list source
+      run: dotnet workload install aspire --ignore-failed-sources
 
-    # For azd deploy to pull base image defined in ApiService.csproj
     - name: Login to ghcr.io
-      uses: azure/docker-login@v1
+      uses: docker/login-action@v3
       with:
-        login-server: ghcr.io
+        registry: ${{env.CONTAINER_REGISTRY}}
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
 
     - name: Update NuGet Package Sources
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
 
-    - name: Install .NET Aspire workload
-      run: dotnet workload install aspire --ignore-failed-sources
-
-    # - name: BaseContainerImage Isolated Test
-    #   run: |
-    #     dotnet restore
-    #     dotnet build -c Release --no-restore
-    #     dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer --no-build --no-restore
+    - name: BaseContainerImage Isolated Test
+      run: |
+        dotnet restore
+        dotnet build -c Release --no-restore
+        dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer \
+          --no-build --no-restore \
+          -p ContainerBaseImage="${{env.BASE_IMAGE}}" \
+          -p ContainerRepository="${{env.APP_IMAGE_NAME}}" \
+          -p ContainerImageTag="${{env.APP_IMAGE_TAG}}" \
+          -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
 
     - name: Install azd
       uses: Azure/setup-azd@v1.0.0
