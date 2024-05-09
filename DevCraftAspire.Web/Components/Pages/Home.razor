@@ -4,23 +4,28 @@
 @* Important: prerender the ReportViewer *@
 @rendermode InteractiveServer
 
+@* The ReportViewer's resources come from a different application/container (Aspire.ApiService). So, we need to dynamically determine 
+    what the REST service's URL is going to be. Fortunately, .NET Aspire generates a 'services__apiservice__https__0' 
+    environment variable that contains the host URL! 
+*@
 <environment include="Development">
     <script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
 </environment>
-
 <environment include="Staging,Production">
     <script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
 </environment>
 
+@* CSS for the ReportViewer's dimensions' *@
 <style>
     #rv1 {
         position: relative;
-        width: 800px;
-        height: 1200px;
+        width: 900px;
+        height: 800px;
     }
 </style>
 
-@* Important: Viewer's resources are dynamically loaded in OnAfterRenderAsync because I don't know the base URL yet *@
+<p>Current Service URL: @ApiServiceUrl</p>
+
 <ReportViewer @ref="ReportViewer1"
               ViewerId="rv1"
               ServiceUrl="@ApiServiceUrl"
@@ -37,6 +42,7 @@
     {
         Console.WriteLine($"service : {Environment.GetEnvironmentVariable("services__apiservice__https__0")}");
 
+        // IMPORTANT: Here I am also using the same dynamic approach to set the REST service's URL 
         var rootUrl = "";
 #if DEBUG
         rootUrl = "https://localhost:7443";
