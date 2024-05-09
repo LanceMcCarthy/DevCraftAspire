@@ -1,11 +1,24 @@
 ﻿@page "/"
 @using Telerik.ReportViewer.Blazor
-@using DevCraftAspire.Web.Clients
-@inject IJSRuntime JSRuntime
-@inject ReportsApiClient ReportsApi
 
 @* Important: prerender the ReportViewer *@
 @rendermode InteractiveServer
+
+<environment include="Development">
+    <script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
+</environment>
+
+<environment include="Staging,Production">
+    <script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
+</environment>
+
+<style>
+    #rv1 {
+        position: relative;
+        width: 800px;
+        height: 1200px;
+    }
+</style>
 
 @* Important: Viewer's resources are dynamically loaded in OnAfterRenderAsync because I don't know the base URL yet *@
 <ReportViewer @ref="ReportViewer1"
@@ -22,25 +35,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-    }
+        Console.WriteLine($"service : {Environment.GetEnvironmentVariable("services__apiservice__https__0")}");
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            var rootUrl = "";
+        var rootUrl = "";
 #if DEBUG
-            rootUrl = "https://localhost:7443";
+        rootUrl = "https://localhost:7443";
 #elif RELEASE
-            rootUrl = Environment.GetEnvironmentVariable("services__apiservice__https__0");
+        rootUrl = Environment.GetEnvironmentVariable("services__apiservice__https__0");
 #endif
+        this.ApiServiceUrl = $"{rootUrl}/reports";
 
-            await JSRuntime.InvokeVoidAsync("loadScript", $"{rootUrl}/reports");
-
-            this.ApiServiceUrl = $"{rootUrl}/reports";
-        }
-
-        await base.OnAfterRenderAsync(firstRender);
+        await base.OnInitializedAsync();
     }
 }
