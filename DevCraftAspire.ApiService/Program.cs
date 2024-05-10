@@ -5,10 +5,6 @@ using Telerik.Reporting.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var telerikListener = new TextWriterTraceListener("TelerikTraceOutput.log", "TelerikListener");
-telerikListener.Filter = new SourceFilter("Telerik.Reporting");
-Trace.Listeners.Add(telerikListener);
-
 // Comes from ServiceDefaults project's extensions
 builder.AddServiceDefaults();
 
@@ -52,5 +48,9 @@ app.MapControllers();
 app.UseCors("ReportingRestPolicy");
 
 app.MapDefaultEndpoints();
+
+// For REST service errors
+System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener(File.CreateText("_traceoutput.log")));
+System.Diagnostics.Trace.AutoFlush = true;
 
 app.Run();
