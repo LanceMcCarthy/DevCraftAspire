@@ -50,9 +50,9 @@ app.UseCors("ReportingRestPolicy");
 app.MapDefaultEndpoints();
 
 // For REST service errors
-var logFilePath = "_traceoutput.log";
-File.SetUnixFileMode(logFilePath, UnixFileMode.UserRead | UnixFileMode.UserWrite);
-System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener(File.CreateText(logFilePath)));
-System.Diagnostics.Trace.AutoFlush = true;
+//var logFilePath = "_traceoutput.log";
+//File.SetUnixFileMode(logFilePath, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+//System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener(File.CreateText(logFilePath)));
+//System.Diagnostics.Trace.AutoFlush = true;
 
 app.Run();
