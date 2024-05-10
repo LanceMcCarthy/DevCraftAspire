@@ -1,8 +1,13 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Diagnostics;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var telerikListener = new TextWriterTraceListener("TelerikTraceOutput.log", "TelerikListener");
+telerikListener.Filter = new SourceFilter("Telerik.Reporting");
+Trace.Listeners.Add(telerikListener);
 
 // Comes from ServiceDefaults project's extensions
 builder.AddServiceDefaults();
