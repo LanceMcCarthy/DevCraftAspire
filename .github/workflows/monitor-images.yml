@@ -2,13 +2,13 @@ name: "Monitor .NET 8.0 Base Image"
 on:
   workflow_dispatch:
   schedule: 
-  - cron: "0 0 * * 0" # sundays at midnight
+  - cron: "0 0 * * *" # Check once a day, at midnight
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # needed to trigger repository_dispatch
+      contents: write # required to trigger repository_dispatch
     steps:
       - uses: actions/checkout@v4
         with:
