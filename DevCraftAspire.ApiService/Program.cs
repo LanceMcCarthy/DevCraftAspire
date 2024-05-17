@@ -49,14 +49,11 @@ app.UseCors("ReportingRestPolicy");
 
 app.MapDefaultEndpoints();
 
+// Temporary for debugging ApiService file access
 #if RELEASE
-
-// For REST service errors
-var logFilePath = "/home/_traceoutput.log";
-//File.SetUnixFileMode(logFilePath, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+var logFilePath = "/home/app/_traceoutput.log";
 System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener());
 System.Diagnostics.Trace.AutoFlush = true;
 #endif
-
 
 app.Run();
