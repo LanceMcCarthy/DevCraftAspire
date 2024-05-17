@@ -31,30 +31,32 @@ permissions:
   packages: write
 
 jobs:
+  # ## Not needed on every build anymore, the monitor-images.yml workflow will check and rebuild base image as-needed ##
+  
+  # update_base_image:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
+  #     with:
+  #       fetch-depth: 0
+
+  #   - name: Login to ghcr.io
+  #     uses: docker/login-action@v3
+  #     with:
+  #       registry: ${{env.CONTAINER_REGISTRY}}
+  #       username: ${{github.actor}}
+  #       password: ${{secrets.GITHUB_TOKEN}}
+
   # Build a custom base image with needed Linux dependencies preinstalled
-  update_base_image:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Login to ghcr.io
-      uses: docker/login-action@v3
-      with:
-        registry: ${{env.CONTAINER_REGISTRY}}
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Build Custom Image and push to GitHub packages
-      working-directory: '.dockerbuilds/baseimage'
-      run: |
-        docker build -t ${{ env.BASE_IMAGE }} -f Dockerfile .
-        docker push ${{ env.BASE_IMAGE }}
+  #   - name: Build Custom Image and push to GitHub packages
+  #     working-directory: '.dockerbuilds/baseimage'
+  #     run: |
+  #       docker build -t ${{ env.BASE_IMAGE }} -f Dockerfile .
+  #       docker push ${{ env.BASE_IMAGE }}
 
   deploy_app:
-    needs: [update_base_image]
+    #needs: [update_base_image]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
