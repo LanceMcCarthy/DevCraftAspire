@@ -4,10 +4,9 @@ using Telerik.Reporting.Services;
 
 namespace DevCraftAspire.ApiService.Controllers;
 
-// Primary constructors allow for nice clear Telerik Reporting ReportsController.
 [Route("/reports")]
 [ApiController]
-public class ReportsController(IReportServiceConfiguration reportServiceConfiguration) 
+public class ReportsController(IReportServiceConfiguration reportServiceConfiguration) // Primary constructors allow for a simplified ReportsController.
     : ReportsControllerBase(reportServiceConfiguration)
 {
 }

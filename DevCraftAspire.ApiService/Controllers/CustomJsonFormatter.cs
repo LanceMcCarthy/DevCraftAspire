@@ -28,10 +28,11 @@ internal class MySuperJsonInputFormatter : TextInputFormatter
     {
         var mvcOpt = context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value;
         var formatters = mvcOpt.InputFormatters;
-        TextInputFormatter formatter = null; // the real formatter : SystemTextJsonInput or Newtonsoft
+        TextInputFormatter? formatter = null; // the real formatter : SystemTextJsonInput or Newtonsoft
 
-        Endpoint endpoint = context.HttpContext.GetEndpoint();
-        if (endpoint.Metadata.GetMetadata<UseSystemTextJsonAttribute>() != null)
+        var endpoint = context.HttpContext.GetEndpoint();
+
+        if (endpoint?.Metadata.GetMetadata<UseSystemTextJsonAttribute>() != null)
         {
             formatter = formatters.OfType<SystemTextJsonInputFormatter>().FirstOrDefault();
             //formatter = formatter ?? SystemTextJsonInputFormatter
@@ -39,13 +40,13 @@ internal class MySuperJsonInputFormatter : TextInputFormatter
         else if (endpoint.Metadata.GetMetadata<UseNewtonsoftJsonAttribute>() != null)
         {
             // don't use `Of<NewtonsoftJsonInputFormatter>` here because there's a NewtonsoftJsonPatchInputFormatter
-            formatter = (NewtonsoftJsonInputFormatter)(formatters.FirstOrDefault(f => typeof(NewtonsoftJsonInputFormatter) == f.GetType()));
+            formatter = (NewtonsoftJsonInputFormatter)formatters.FirstOrDefault(f => typeof(NewtonsoftJsonInputFormatter) == f.GetType())!;
         }
         else
         {
             throw new Exception("This formatter is only used for System.Text.Json InputFormatter or NewtonsoftJson InputFormatter");
         }
-        var result = await formatter.ReadRequestBodyAsync(context, encoding);
+        var result = await formatter?.ReadRequestBodyAsync(context, encoding)!;
         return result;
     }
 }
@@ -65,18 +66,18 @@ internal class MySuperJsonOutputFormatter : TextOutputFormatter
         var mvcOpt = httpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value;
         var formatters = mvcOpt.OutputFormatters;
 
-        TextOutputFormatter formatter = null;
+        TextOutputFormatter? formatter = null;
 
-        Endpoint endpoint = httpContext.GetEndpoint();
+        var endpoint = httpContext.GetEndpoint();
 
-        if (endpoint.Metadata.GetMetadata<UseSystemTextJsonAttribute>() != null)
+        if (endpoint?.Metadata.GetMetadata<UseSystemTextJsonAttribute>() != null)
         {
             formatter = formatters.OfType<SystemTextJsonOutputFormatter>().FirstOrDefault();
         }
-        else if (endpoint.Metadata.GetMetadata<UseNewtonsoftJsonAttribute>() != null)
+        else if (endpoint?.Metadata.GetMetadata<UseNewtonsoftJsonAttribute>() != null)
         {
             // don't use `Of<NewtonsoftJsonInputFormatter>` here because there's a NewtonsoftJsonPatchInputFormatter
-            formatter = (NewtonsoftJsonOutputFormatter)(formatters.FirstOrDefault(f => typeof(NewtonsoftJsonOutputFormatter) == f.GetType()));
+            formatter = (NewtonsoftJsonOutputFormatter)formatters.FirstOrDefault(f => typeof(NewtonsoftJsonOutputFormatter) == f.GetType())!;
         }
         else
         {

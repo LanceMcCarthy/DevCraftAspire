@@ -36,17 +36,15 @@
 @code {
     private string? ApiServiceUrl { get; set; }
     private ReportViewer? ReportViewer1 { get; set; }
-    private ReportSourceOptions MyReportSource { get; set; } = new() { Report = "Barcodes Report.trdp" };
+    private ReportSourceOptions MyReportSource { get; set; } = new() { Report = "BarcodesReport.trdp" };
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine($"service : {Environment.GetEnvironmentVariable("services__apiservice__https__0")}");
-
-        // IMPORTANT: Here I am also using the same dynamic approach to set the REST service's URL 
         var rootUrl = "";
 #if DEBUG
         rootUrl = "https://localhost:7443";
 #elif RELEASE
+        // If we are running in Azure, the final URL will be available in this variable
         rootUrl = Environment.GetEnvironmentVariable("services__apiservice__https__0");
 #endif
         this.ApiServiceUrl = $"{rootUrl}/reports";
