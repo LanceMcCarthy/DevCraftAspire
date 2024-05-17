@@ -52,8 +52,8 @@ app.MapDefaultEndpoints();
 #if RELEASE
 
 // For REST service errors
-var logFilePath = "/var/log/_traceoutput.log";
-File.SetUnixFileMode(logFilePath, UnixFileMode.UserRead | UnixFileMode.UserWrite);
+var logFilePath = "/home/_traceoutput.log";
+//File.SetUnixFileMode(logFilePath, UnixFileMode.UserRead | UnixFileMode.UserWrite);
 System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener());
 System.Diagnostics.Trace.AutoFlush = true;
 #endif
