@@ -10,6 +10,7 @@ on:
       - 'DevCraftAspire.AppHost/**/*'
       - 'DevCraftAspire.ServiceDefaults/**/*'
       - 'DevCraftAspire.Web/**/*'
+      - '.github/workflows/deploy.yml'
 
 env:
   CONTAINER_REGISTRY: "ghcr.io"

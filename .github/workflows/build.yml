@@ -26,7 +26,7 @@ jobs:
         dotnet-version: '8.0.x'
         
     - name: Install .NET Aspire workload
-      run: dotnet workload install aspire
+      run: dotnet workload install aspire --ignore-failed-sources
 
     - name: Update NuGet Package Sources
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
