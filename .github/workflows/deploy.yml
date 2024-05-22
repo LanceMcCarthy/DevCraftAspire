@@ -14,16 +14,6 @@ on:
 
 env:
   CONTAINER_REGISTRY: "ghcr.io"
-  BASE_IMAGE: "ghcr.io/lancemccarthy/aspirebase:8.0"
-  APP_IMAGE_NAME: lancemccarthy/aspireapiservice
-  APP_IMAGE_TAG: "8.0"
-  ASPIRE_ENVIRONMENT: "aspire2b"
-  AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
-  AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
-  AZURE_SUBSCRIPTION_ID: ${{vars.AZURE_SUBSCRIPTION_ID}}
-  AZURE_ENV_NAME: ${{vars.AZURE_ENV_NAME}}
-  AZURE_LOCATION: ${{vars.AZURE_LOCATION}}
-  AZURE_CREDS_PROVIDER: "github"
 
 permissions:
   id-token: write
@@ -31,8 +21,27 @@ permissions:
   packages: write
 
 jobs:
-  create_base_image:
+  generate_container_tag:
     runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Generate version number
+      id: tagger
+      shell: bash
+      run: |
+        buildDay=`date +%Y.%m%d`
+        echo $buildDay
+        runNum=${{github.run_number}}
+        tag="${buildDay}.${runNum}.0"
+        echo "new_tag=$tag" >> "$GITHUB_OUTPUT"
+
+  update_base_image:
+    runs-on: ubuntu-latest
+    needs: [generate_container_tag]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -50,12 +59,25 @@ jobs:
     - name: Build Custom Image and push to GitHub packages
       working-directory: '.dockerbuilds/baseimage'
       run: |
-        docker build -t ${{ env.BASE_IMAGE }} -f Dockerfile .
-        docker push ${{ env.BASE_IMAGE }}
+        image="ghcr.io/lancemccarthy/aspirebase:${TAG}"
+        docker build -t $image -f Dockerfile .
+        docker push $image
+        echo "new_image=$image" >> "$GITHUB_OUTPUT"
+      env:
+        TAG: ${{needs.generate_container_tag.outputs.new_tag}}
 
   deploy_app:
-    #needs: [update_base_image]
+    needs: [update_base_image, generate_container_tag]
     runs-on: ubuntu-latest
+    env:
+      ASPIRE_ENVIRONMENT: "aspire2b"
+      AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
+      AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
+      AZURE_SUBSCRIPTION_ID: ${{vars.AZURE_SUBSCRIPTION_ID}}
+      AZURE_ENV_NAME: ${{vars.AZURE_ENV_NAME}}
+      AZURE_LOCATION: ${{vars.AZURE_LOCATION}}
+      AZURE_CREDS_PROVIDER: "github"
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -74,7 +96,15 @@ jobs:
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
 
     - name: Build container with custom base
-      run: dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="${{env.BASE_IMAGE}}" -p ContainerRepository="${{env.APP_IMAGE_NAME}}" -p ContainerImageTag="${{env.APP_IMAGE_TAG}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
+      run: |
+        echo "confirming BASE_IMAGE"
+        echo ${{env.BASE_IMAGE}}
+        echo "Confirming TAG"
+        echo ${{env.TAG}}
+        dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="${{env.BASE_IMAGE}}" -p ContainerRepository="lancemccarthy/aspireapiservice" -p ContainerImageTag="${{env.TAG}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
+      env:
+        TAG: ${{needs.generate_container_tag.outputs.new_tag}}
+        BASE_IMAGE: ${{needs.update_base_image.outputs.new_image}}
 
     - name: Install azd
       uses: Azure/setup-azd@v1.0.0
