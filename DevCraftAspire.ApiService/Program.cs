@@ -52,15 +52,16 @@ app.UseCors("ReportingRestPolicy");
 
 app.MapDefaultEndpoints();
 
-var azureId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID");
-if (!string.IsNullOrEmpty(azureId))
-{
-    //var homeDirectory = Environment.ExpandEnvironmentVariables("%HOME%");
-    //var logFilePath = Path.Join(homeDirectory, "traceoutput.log");
-    var logFilePath = Path.Join("/home/app", "traceoutput.log");
-    Trace.Listeners.Add(new TextWriterTraceListener(logFilePath, "myListener"));
-    Trace.AutoFlush = true;
-}
+#if RELEASE
+//if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("AZURE_CLIENT_ID")))
+//{
+    
+//}
+
+var logFilePath = Path.Join("/home/app", "traceoutput.log");
+Trace.Listeners.Add(new TextWriterTraceListener(logFilePath, "myListener"));
+Trace.AutoFlush = true;
+#endif
 
 
 app.Run();
