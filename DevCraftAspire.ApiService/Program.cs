@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Comes from ServiceDefaults project's extensions
 builder.AddServiceDefaults();
 
+// For traces
+builder.AddSeqEndpoint("seq");
+
 // Add services to the container.
 builder.Services.AddProblemDetails();
 
@@ -50,10 +53,10 @@ app.UseCors("ReportingRestPolicy");
 app.MapDefaultEndpoints();
 
 // Temporary for debugging ApiService file access
-#if RELEASE
-var logFilePath = "/home/app/_traceoutput.log";
-System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener());
-System.Diagnostics.Trace.AutoFlush = true;
-#endif
+//#if RELEASE
+//var logFilePath = "/home/app/_traceoutput.log";
+//System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener());
+//System.Diagnostics.Trace.AutoFlush = true;
+//#endif
 
 app.Run();

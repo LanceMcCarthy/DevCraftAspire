@@ -5,6 +5,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire components.
 builder.AddServiceDefaults();
+
+// For traces
+builder.AddSeqEndpoint("seq");
+
+// For caching
 builder.AddRedisOutputCache("cache");
 
 // Add services to the container.
