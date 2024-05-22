@@ -41,14 +41,9 @@ jobs:
       working-directory: '.dockerbuilds/baseimage'
       id: build-and-publish
       run: |
-        # 1. concatenate a full name using the run number as the tag
         fullimagename="ghcr.io/lancemccarthy/aspirebase:${{github.run_number}}"
-        
-        # 2. Build and push container
         docker build -t $fullimagename -f Dockerfile .
         docker push $fullimagename
-
-        # 3. output the image name for use in other job
         echo "baseimage=$fullimagename" >> "$GITHUB_OUTPUT"
 
   deploy_app:
@@ -66,6 +61,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Check job outputs
+      run: |
+        echo "bash var"
+        echo $BASE_IMAGE
+        echo "github env"
+        echo ${{env.BASE_IMAGE}}
+        echo "raw output"
+        echo ${{needs.update_base_image.outputs.baseimage}}
+      env:
+        BASE_IMAGE: ${{needs.update_base_image.outputs.baseimage}}
+
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire --ignore-failed-sources
 
@@ -81,16 +87,9 @@ jobs:
 
     - name: Build container with custom base
       run: |
-        echo "Confirming BASE_IMAGE... "
-        echo ${{env.BASE_IMAGE}}
-        
-        dotnet publish "${{env.PROJECT_PATH}}" /t:PublishContainer -p ContainerBaseImage="${{env.BASE_IMAGE}}" -p ContainerRepository="${{env.API_SERVICE_REPOSITORY}}" -p ContainerImageTag="${{env.RUN_NUM}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
-      env:
-        PROJECT_PATH: 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj'
-        BASE_IMAGE: ${{needs.update_base_image.outputs.baseimage}}
-        API_SERVICE_REPOSITORY: "lancemccarthy/aspireapiservice"
-        RUN_NUM: ${{github.run_number}}
-
+        echo "confirm base image name"
+        echo "ghcr.io/lancemccarthy/aspirebase:${{github.run_number}}"
+        dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="ghcr.io/lancemccarthy/aspirebase:${{github.run_number}}" -p ContainerRepository="lancemccarthy/aspireapiservice" -p ContainerImageTag="${{github.run_number}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
 
     - name: Install azd
       uses: Azure/setup-azd@v1.0.0
