@@ -23,6 +23,8 @@ permissions:
 jobs:
   update_base_image:
     runs-on: ubuntu-latest
+    outputs:
+      BASE_IMAGE_NAME: ${{ steps.build-and-publish.outputs.baseimage }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -64,13 +66,13 @@ jobs:
     - name: Check job outputs
       run: |
         echo "bash var"
-        echo $BASE_IMAGE
+        echo "$BASE_IMAGE"
         echo "github env"
-        echo ${{env.BASE_IMAGE}}
+        echo "${{env.BASE_IMAGE}}"
         echo "raw output"
-        echo ${{needs.update_base_image.outputs.baseimage}}
+        echo "${{needs.update_base_image.outputs.BASE_IMAGE_NAME}}"
       env:
-        BASE_IMAGE: ${{needs.update_base_image.outputs.baseimage}}
+        BASE_IMAGE: ${{needs.update_base_image.outputs.BASE_IMAGE_NAME}}
 
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire --ignore-failed-sources
@@ -87,8 +89,6 @@ jobs:
 
     - name: Build container with custom base
       run: |
-        echo "confirm base image name"
-        echo "ghcr.io/lancemccarthy/aspirebase:${{github.run_number}}"
         dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="ghcr.io/lancemccarthy/aspirebase:${{github.run_number}}" -p ContainerRepository="lancemccarthy/aspireapiservice" -p ContainerImageTag="${{github.run_number}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
 
     - name: Install azd
