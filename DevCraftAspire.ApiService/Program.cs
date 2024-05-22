@@ -52,11 +52,15 @@ app.UseCors("ReportingRestPolicy");
 
 app.MapDefaultEndpoints();
 
-// Temporary for debugging ApiService file access
-//#if RELEASE
-//var logFilePath = "/home/app/_traceoutput.log";
-//System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.TextWriterTraceListener());
-//System.Diagnostics.Trace.AutoFlush = true;
-//#endif
+var azureId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID");
+if (!string.IsNullOrEmpty(azureId))
+{
+    //var homeDirectory = Environment.ExpandEnvironmentVariables("%HOME%");
+    //var logFilePath = Path.Join(homeDirectory, "traceoutput.log");
+    var logFilePath = Path.Join("/home/app", "traceoutput.log");
+    Trace.Listeners.Add(new TextWriterTraceListener(logFilePath, "myListener"));
+    Trace.AutoFlush = true;
+}
+
 
 app.Run();
