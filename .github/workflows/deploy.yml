@@ -44,9 +44,9 @@ jobs:
       id: build-and-publish
       run: |
         fullimagename="ghcr.io/lancemccarthy/aspirebase:${{github.run_number}}"
+        echo "baseimage=$fullimagename" >> "$GITHUB_OUTPUT"
         docker build -t $fullimagename -f Dockerfile .
         docker push $fullimagename
-        echo "baseimage=$fullimagename" >> "$GITHUB_OUTPUT"
 
   deploy_app:
     needs: [update_base_image]
@@ -63,17 +63,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Check job outputs
-      run: |
-        echo "bash var"
-        echo "$BASE_IMAGE"
-        echo "github env"
-        echo "${{env.BASE_IMAGE}}"
-        echo "raw output"
-        echo "${{needs.update_base_image.outputs.BASE_IMAGE_NAME}}"
-      env:
-        BASE_IMAGE: ${{needs.update_base_image.outputs.BASE_IMAGE_NAME}}
-
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire --ignore-failed-sources
 
@@ -88,8 +77,12 @@ jobs:
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
 
     - name: Build container with custom base
-      run: |
-        dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="ghcr.io/lancemccarthy/aspirebase:${{github.run_number}}" -p ContainerRepository="lancemccarthy/aspireapiservice" -p ContainerImageTag="${{github.run_number}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
+      run: >
+        dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer
+          -p ContainerBaseImage="${{needs.update_base_image.outputs.BASE_IMAGE_NAME}}"
+          -p ContainerRepository="lancemccarthy/aspireapiservice"
+          -p ContainerImageTag="${{github.run_number}}"
+          -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
 
     - name: Install azd
       uses: Azure/setup-azd@v1.0.0
