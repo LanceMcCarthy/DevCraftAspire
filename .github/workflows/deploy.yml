@@ -14,6 +14,9 @@ on:
 
 env:
   CONTAINER_REGISTRY: "ghcr.io"
+  BASE_IMAGE: "ghcr.io/lancemccarthy/aspirebase:8.0"
+  APISERVICE_CONTAINER_REPO: "lancemccarthy/aspireapiservice"
+  APISERVICE_CONTAINER_TAG: "8.0"
 
 permissions:
   id-token: write
@@ -23,8 +26,6 @@ permissions:
 jobs:
   update_base_image:
     runs-on: ubuntu-latest
-    outputs:
-      BASE_IMAGE_NAME: ${{ steps.build-and-publish.outputs.baseimage }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -43,10 +44,8 @@ jobs:
       working-directory: '.dockerbuilds/baseimage'
       id: build-and-publish
       run: |
-        fullimagename="ghcr.io/lancemccarthy/aspirebase:${{github.run_number}}"
-        echo "baseimage=$fullimagename" >> "$GITHUB_OUTPUT"
-        docker build -t $fullimagename -f Dockerfile .
-        docker push $fullimagename
+        docker build -t "${{env.BASE_IMAGE}}" -f Dockerfile .
+        docker push "${{env.BASE_IMAGE}}"
 
   deploy_app:
     needs: [update_base_image]
@@ -77,7 +76,7 @@ jobs:
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
 
     - name: Build container with custom base
-      run: dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="${{needs.update_base_image.outputs.BASE_IMAGE_NAME}}" -p ContainerRepository="lancemccarthy/aspireapiservice" -p ContainerImageTag="${{github.run_number}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
+      run: dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="${{env.BASE_IMAGE}}" -p ContainerRepository="${{env.APISERVICE_CONTAINER_REPO}}" -p ContainerImageTag="${{env.APISERVICE_CONTAINER_TAG}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
 
     - name: Install azd
       uses: Azure/setup-azd@v1.0.0
@@ -92,4 +91,4 @@ jobs:
 
     - name: Deploy Application
       shell: pwsh
-      run: azd deploy --no-prompt --environment "${{env.ASPIRE_ENVIRONMENT}}"
+      run: azd deploy --all --no-prompt --environment "${{env.ASPIRE_ENVIRONMENT}}"
