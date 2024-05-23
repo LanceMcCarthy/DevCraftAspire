@@ -7,8 +7,6 @@ A set of projects that test various Telerik and Kendo components in .NET Aspire!
 |----------|--------|
 | `main` | [![xx](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml) |
 | `release` | [![xx](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml) |
-| `main` | [![xx](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/monitor-images.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/monitor-images.yml) |
-| `main` | [![xx](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/update-images.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/update-images.yml) |
 
 ## Azure Deployment Links
 
