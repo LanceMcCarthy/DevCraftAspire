@@ -20,10 +20,10 @@ jobs:
       contents: read
       packages: write
     env:
-      CONTAINER_REGISTRY: "ghcr.io"
-      BASE_IMAGE: "ghcr.io/lancemccarthy/aspirebase:8.0"
-      APISERVICE_CONTAINER_REPO: "lancemccarthy/aspireapiservice"
-      APISERVICE_CONTAINER_TAG: "8.0"
+      #CONTAINER_REGISTRY: "ghcr.io"
+      #BASE_IMAGE: "ghcr.io/lancemccarthy/aspirebase:8.0"
+      #APISERVICE_CONTAINER_REPO: "lancemccarthy/aspireapiservice"
+      #APISERVICE_CONTAINER_TAG: "8.0"
       ASPIRE_ENVIRONMENT: "aspire2b"
       AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
       AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
@@ -38,18 +38,19 @@ jobs:
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire --ignore-failed-sources
 
-    - name: Login to ghcr.io
-      uses: docker/login-action@v3
-      with:
-        registry: ${{env.CONTAINER_REGISTRY}}
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
+    #- name: Login to ghcr.io
+    #  uses: docker/login-action@v3
+    #  with:
+    #    registry: ${{env.CONTAINER_REGISTRY}}
+    #    username: ${{github.actor}}
+    #    password: ${{secrets.GITHUB_TOKEN}}
 
     - name: Update nuget credentials
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
 
-    - name: Build container with custom base
-      run: dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="${{env.BASE_IMAGE}}" -p ContainerRepository="${{env.APISERVICE_CONTAINER_REPO}}" -p ContainerImageTag="${{env.APISERVICE_CONTAINER_TAG}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
+    # Using csproj to set the base image instead
+    #- name: Build container with custom base
+    #  run: dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="${{env.BASE_IMAGE}}" -p ContainerRepository="${{env.APISERVICE_CONTAINER_REPO}}" -p ContainerImageTag="${{env.APISERVICE_CONTAINER_TAG}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
 
     - name: Install azd
       uses: Azure/setup-azd@v1.0.0

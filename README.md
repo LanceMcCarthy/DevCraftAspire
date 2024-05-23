@@ -3,12 +3,10 @@ A set of projects that test various Telerik and Kendo components in .NET Aspire!
 
 ## CI-CD Status
 
-| Workflows |
-|--------|
-| [![build](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml) |
-| [![deploy](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml) |
-| [![Monitor .NET Base Images](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/monitor-base-images.yml/badge.svg?branch=main)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/monitor-base-images.yml) |
-| [![Update Custom Base Images](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/update-base-images.yml/badge.svg?branch=main)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/update-base-images.yml) |
+| Branch | Status |
+|----------|--------|
+| `main` | [![xx](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml) |
+| `release` | [![xx](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml) |
 
 ## Azure Deployment Links
 
