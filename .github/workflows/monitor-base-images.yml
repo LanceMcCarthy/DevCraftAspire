@@ -1,0 +1,20 @@
+name: "Monitor .NET Base Images"
+on:
+  workflow_dispatch:
+  schedule: 
+  - cron: "0 0 * * 0" # Check once a week on Sunday, at midnight
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to trigger repository_dispatch
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: mthalman/docker-bump-action@v0
+        with:
+          base-image-name: 'mcr.microsoft.com/dotnet/aspnet:8.0'
+          target-image-name: 'ghcr.io/lancemccarthy/aspirebase:8.0'
