@@ -9,19 +9,20 @@
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="DevCraftAspire.Web.styles.css" />
+
     <link href="https://kendo.cdn.telerik.com/themes/7.0.2/default/default-main.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-
-    @* If we're running locally *@
-    <environment include="Development">
+    
+    @* Javascript for the ReportViewer *@
+    @if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("services__apiservice__https__0")))
+    {
         <script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
-    </environment>
-
-    @* If we're running on Azure *@
-    <environment include="AZURE_CLIENT_ID">
+    }
+    else
+    {
         <script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
-    </environment>
+    }
 
     @* CSS for the ReportViewer *@
     <style>
