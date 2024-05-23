@@ -12,7 +12,26 @@
     <link href="https://kendo.cdn.telerik.com/themes/7.0.2/default/default-main.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    
+
+    @* If we're running locally *@
+    <environment include="Development">
+        <script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
+    </environment>
+
+    @* If we're running on Azure *@
+    <environment include="AZURE_CLIENT_ID">
+        <script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
+    </environment>
+
+    @* CSS for the ReportViewer *@
+    <style>
+        #rv1 {
+            position: relative;
+            width: 900px;
+            height: 800px;
+        }
+    </style>
+
     <HeadOutlet />
 </head>
 
