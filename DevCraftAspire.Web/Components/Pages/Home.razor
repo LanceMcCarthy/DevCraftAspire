@@ -1,28 +1,7 @@
 ﻿@page "/"
 @using Telerik.ReportViewer.Blazor
-
 @* Important: prerender the ReportViewer *@
 @rendermode InteractiveServer
-
-@* The ReportViewer's resources come from a different application/container (Aspire.ApiService). So, we need to dynamically determine 
-    what the REST service's URL is going to be. Fortunately, .NET Aspire generates a 'services__apiservice__https__0' 
-    environment variable that contains the host URL! 
-*@
-<environment include="Development">
-    <script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
-</environment>
-<environment include="Staging,Production">
-    <script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
-</environment>
-
-@* CSS for the ReportViewer's dimensions' *@
-<style>
-    #rv1 {
-        position: relative;
-        width: 900px;
-        height: 800px;
-    }
-</style>
 
 <p>Current Service URL: @ApiServiceUrl</p>
 
@@ -32,23 +11,3 @@
               ReportSource="@MyReportSource"
               ScaleMode="@(ScaleMode.Specific)"
               Scale="1.0" />
-
-@code {
-    private string? ApiServiceUrl { get; set; }
-    private ReportViewer? ReportViewer1 { get; set; }
-    private ReportSourceOptions MyReportSource { get; set; } = new() { Report = "BarcodesReport.trdp" };
-
-    protected override async Task OnInitializedAsync()
-    {
-        var rootUrl = "";
-#if DEBUG
-        rootUrl = "https://localhost:7443";
-#elif RELEASE
-        // If we are running in Azure, the final URL will be available in this variable
-        rootUrl = Environment.GetEnvironmentVariable("services__apiservice__https__0");
-#endif
-        this.ApiServiceUrl = $"{rootUrl}/reports";
-
-        await base.OnInitializedAsync();
-    }
-}

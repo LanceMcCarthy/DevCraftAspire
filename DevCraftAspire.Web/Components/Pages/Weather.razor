@@ -40,12 +40,3 @@ else
         </tbody>
     </table>
 }
-
-@code {
-    private WeatherForecast[]? _forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _forecasts = await WeatherApi.GetWeatherAsync();
-    }
-}
