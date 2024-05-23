@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ContainerBaseImage>ghcr.io/lancemccarthy/aspirebase:8.0</ContainerBaseImage>
+    <ContainerBaseImage>acrjmotg62yke5uc.azurecr.io/lancemccarthy/aspirebase:8.0</ContainerBaseImage>
   </PropertyGroup>
 
   <ItemGroup>
