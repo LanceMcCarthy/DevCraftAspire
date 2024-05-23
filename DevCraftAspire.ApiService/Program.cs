@@ -52,16 +52,12 @@ app.UseCors("ReportingRestPolicy");
 
 app.MapDefaultEndpoints();
 
-#if RELEASE
-//if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("AZURE_CLIENT_ID")))
-//{
-    
-//}
-
-var logFilePath = Path.Join("/home/app", "traceoutput.log");
-Trace.Listeners.Add(new TextWriterTraceListener(logFilePath, "myListener"));
-Trace.AutoFlush = true;
-#endif
+// FOR TROUBLESHOOTING IN AZURE
+//#if RELEASE
+//var logFilePath = Path.Join("/home/app", "traceoutput.log");
+//Trace.Listeners.Add(new TextWriterTraceListener(logFilePath, "myListener"));
+//Trace.AutoFlush = true;
+//#endif
 
 
 app.Run();
