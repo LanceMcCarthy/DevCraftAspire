@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY_NAME: "acrjmotg62yke5uc"
   REGISTRY_URL: "acrjmotg62yke5uc.azurecr.io"
   REGISTRY_USERNAME: "acrjmotg62yke5uc"
   REPOSITORY: "lancemccarthy/aspirebase"
@@ -29,6 +28,5 @@ jobs:
       working-directory: '.dockerbuilds/baseimage'
       id: build-and-publish
       run: |
-        eight_tagged="${{env.REGISTRY_NAME}}/${{env.REPOSITORY}}:8.0"
-        docker build -t $eight_tagged -t $latest_tagged -f Dockerfile .
-        docker push $eight_tagged
+        docker build -t "${{env.REGISTRY_URL}}/${{env.REPOSITORY}}:8.0" -f Dockerfile .
+        docker push "${{env.REGISTRY_URL}}/${{env.REPOSITORY}}:8.0"
