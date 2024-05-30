@@ -2,15 +2,15 @@ name: "Deploy to Azure"
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - release
-    paths:
-      - 'DevCraftAspire.ApiService/**/*'
-      - 'DevCraftAspire.AppHost/**/*'
-      - 'DevCraftAspire.ServiceDefaults/**/*'
-      - 'DevCraftAspire.Web/**/*'
-      - '.github/workflows/deploy.yml'
+  # push:
+  #   branches:
+  #     - release
+  #   paths:
+  #     - 'DevCraftAspire.ApiService/**/*'
+  #     - 'DevCraftAspire.AppHost/**/*'
+  #     - 'DevCraftAspire.ServiceDefaults/**/*'
+  #     - 'DevCraftAspire.Web/**/*'
+  #     - '.github/workflows/deploy.yml'
 
 jobs:
   deploy_app:
