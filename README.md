@@ -2,11 +2,6 @@
 
 A set of projects that test various Telerik and Kendo components in .NET Aspire!
 
-## Azure Deployment Links
-
-- App => https://webfrontend.purpledune-16458cf6.eastus2.azurecontainerapps.io/ 
-- ApiService => https://apiservice.purpledune-16458cf6.eastus2.azurecontainerapps.io/reports/formats
-
 ## CI-CD Status
 
 | Build Base | Build | Deploy |
