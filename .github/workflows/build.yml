@@ -1,15 +1,15 @@
 name: "Build Main"
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - 'DevCraftAspire.ApiService/**/*'
-      - 'DevCraftAspire.AppHost/**/*'
-      - 'DevCraftAspire.ServiceDefaults/**/*'
-      - 'DevCraftAspire.Web/**/*'
-      - '.github/workflows/build.yml'
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'DevCraftAspire.ApiService/**/*'
+  #     - 'DevCraftAspire.AppHost/**/*'
+  #     - 'DevCraftAspire.ServiceDefaults/**/*'
+  #     - 'DevCraftAspire.Web/**/*'
+  #     - '.github/workflows/build.yml'
 
 jobs:
   build_app:
