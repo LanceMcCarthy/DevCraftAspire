@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.Seq" Version="9.4.1" />
-    <PackageReference Include="Aspire.Seq" Version="9.4.1" />
-    <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="9.4.1" />
-    <PackageReference Include="Telerik.ReportViewer.Blazor" Version="19.2.25.813" />
-    <PackageReference Include="Telerik.UI.for.Blazor" Version="10.0.0" />
+    <PackageReference Include="Aspire.Hosting.Seq" Version="9.5.2" />
+    <PackageReference Include="Aspire.Seq" Version="9.5.2" />
+    <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="9.5.2" />
+    <PackageReference Include="Telerik.ReportViewer.Blazor" Version="19.2.25.1001" />
+    <PackageReference Include="Telerik.UI.for.Blazor" Version="11.3.0" />
   </ItemGroup>
   
 </Project>

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj" />
+  <Project Path="DevCraftAspire.AppHost/DevCraftAspire.AppHost.csproj" />
+  <Project Path="DevCraftAspire.ServiceDefaults/DevCraftAspire.ServiceDefaults.csproj" />
+  <Project Path="DevCraftAspire.Web/DevCraftAspire.Web.csproj" />
+</Solution>
