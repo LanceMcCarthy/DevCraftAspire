@@ -1,35 +1,27 @@
 name: "Build Main"
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'DevCraftAspire.ApiService/**/*'
-  #     - 'DevCraftAspire.AppHost/**/*'
-  #     - 'DevCraftAspire.ServiceDefaults/**/*'
-  #     - 'DevCraftAspire.Web/**/*'
-  #     - '.github/workflows/build.yml'
+
+env:
+  NUGET_CONF_PATH: './nuget.config'
 
 jobs:
   build_app:
     runs-on: ubuntu-latest
-    env:
-      NUGET_CONF_PATH: './nuget.config'
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v4
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: '8.0.x'
-        
-    - name: Install .NET Aspire workload
-      run: dotnet workload install aspire --ignore-failed-sources
+        dotnet-version: '9.0.x'
 
     - name: Update NuGet Package Sources
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
+        
+    - name: Install .NET Aspire workload
+      run: dotnet workload install aspire --ignore-failed-sources
 
     - name: Restore NuGet packages
       run: dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
