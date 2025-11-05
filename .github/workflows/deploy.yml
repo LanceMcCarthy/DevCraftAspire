@@ -35,9 +35,12 @@ jobs:
     - name: Update NuGet Package Sources
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
         
-    - name: INstall Aspire 13 preview SDK
-      run: powershell -Command "Invoke-Expression (Invoke-RestMethod https://aspire.dev/install.ps1)"
-        
+    - name: Install Aspire 13 preview SDK
+      run: |
+        curl -sSL https://aspire.dev/install.sh -o install-aspire.sh
+        bash install-aspire.sh
+
+    # After release
     # - name: Install .NET Aspire workload
     #   run: dotnet workload install aspire --ignore-failed-sources
 
