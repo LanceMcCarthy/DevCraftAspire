@@ -4,6 +4,7 @@ on:
 
 env:
   NUGET_CONF_PATH: './nuget.config'
+  SOLUTION_PATH: './DevCraftAspire.slnx'
 
 jobs:
   build_app:
@@ -28,7 +29,7 @@ jobs:
     #   run: dotnet workload install aspire --ignore-failed-sources
 
     - name: Restore NuGet packages
-      run: dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
+      run: dotnet restore ${{env.SOLUTION_PATH}} --configfile ${{env.NUGET_CONF_PATH}}
 
     - name: Build solution
-      run: dotnet build -c Release --no-restore
+      run: dotnet build ${{env.SOLUTION_PATH}} -c Release --no-restore
