@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
 
 env:
+  NUGET_CONF_PATH: './nuget.config'
+  SOLUTION_PATH: './DevCraftAspire.slnx'
   #CONTAINER_REGISTRY: "ghcr.io"
   #BASE_IMAGE: "ghcr.io/lancemccarthy/aspirebase:8.0"
   #APISERVICE_CONTAINER_REPO: "lancemccarthy/aspireapiservice"
@@ -45,7 +47,7 @@ jobs:
     #   run: dotnet workload install aspire --ignore-failed-sources
 
     - name: Restore NuGet packages
-      run: dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
+      run: dotnet restore ${{env.SOLUTION_PATH}} --configfile ${{env.NUGET_CONF_PATH}}
 
     #- name: Login to ghcr.io
     #  uses: docker/login-action@v3
@@ -57,7 +59,10 @@ jobs:
     # Using csproj to set the base image instead
     #- name: Build container with custom base
     #  run: dotnet publish 'DevCraftAspire.ApiService/DevCraftAspire.ApiService.csproj' /t:PublishContainer -p ContainerBaseImage="${{env.BASE_IMAGE}}" -p ContainerRepository="${{env.APISERVICE_CONTAINER_REPO}}" -p ContainerImageTag="${{env.APISERVICE_CONTAINER_TAG}}" -p ContainerRegistry="${{env.CONTAINER_REGISTRY}}"
-
+    
+    - name: Build solution
+      run: dotnet build ${{env.SOLUTION_PATH}} -c Release --no-restore
+      
     - name: Install azd
       uses: Azure/setup-azd@v1.0.0
 
