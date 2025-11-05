@@ -21,7 +21,7 @@ jobs:
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
 
     - name: Install Aspire 13 preview SDK
-      run: powershell -Command "Invoke-Expression (Invoke-RestMethod https://aspire.dev/install.ps1)"
+      run: Invoke-Expression (Invoke-RestMethod https://aspire.dev/install.ps1)
         
     # - name: Install .NET Aspire workload
     #   run: dotnet workload install aspire --ignore-failed-sources
