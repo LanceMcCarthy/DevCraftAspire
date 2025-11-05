@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.Seq" Version="9.5.2" />
-    <PackageReference Include="Aspire.Seq" Version="9.5.2" />
-    <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="9.5.2" />
+    <PackageReference Include="Aspire.Hosting.Seq" Version="13.1.0-preview.1.25554.12" />
+    <PackageReference Include="Aspire.Seq" Version="13.1.0-preview.1.25554.12" />
+    <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="13.1.0-preview.1.25554.12" />
     <PackageReference Include="Telerik.ReportViewer.Blazor" Version="19.2.25.1001" />
     <PackageReference Include="Telerik.UI.for.Blazor" Version="11.3.0" />
   </ItemGroup>
