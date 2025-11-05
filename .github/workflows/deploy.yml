@@ -2,15 +2,19 @@ name: "Deploy to Azure"
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - release
-  #   paths:
-  #     - 'DevCraftAspire.ApiService/**/*'
-  #     - 'DevCraftAspire.AppHost/**/*'
-  #     - 'DevCraftAspire.ServiceDefaults/**/*'
-  #     - 'DevCraftAspire.Web/**/*'
-  #     - '.github/workflows/deploy.yml'
+
+env:
+  #CONTAINER_REGISTRY: "ghcr.io"
+  #BASE_IMAGE: "ghcr.io/lancemccarthy/aspirebase:8.0"
+  #APISERVICE_CONTAINER_REPO: "lancemccarthy/aspireapiservice"
+  #APISERVICE_CONTAINER_TAG: "8.0"
+  ASPIRE_ENVIRONMENT: "aspire2b"
+  AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
+  AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
+  AZURE_SUBSCRIPTION_ID: ${{vars.AZURE_SUBSCRIPTION_ID}}
+  AZURE_ENV_NAME: ${{vars.AZURE_ENV_NAME}}
+  AZURE_LOCATION: ${{vars.AZURE_LOCATION}}
+  AZURE_CREDS_PROVIDER: "github"
 
 jobs:
   deploy_app:
@@ -19,24 +23,23 @@ jobs:
       id-token: write
       contents: read
       packages: write
-    env:
-      #CONTAINER_REGISTRY: "ghcr.io"
-      #BASE_IMAGE: "ghcr.io/lancemccarthy/aspirebase:8.0"
-      #APISERVICE_CONTAINER_REPO: "lancemccarthy/aspireapiservice"
-      #APISERVICE_CONTAINER_TAG: "8.0"
-      ASPIRE_ENVIRONMENT: "aspire2b"
-      AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
-      AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
-      AZURE_SUBSCRIPTION_ID: ${{vars.AZURE_SUBSCRIPTION_ID}}
-      AZURE_ENV_NAME: ${{vars.AZURE_ENV_NAME}}
-      AZURE_LOCATION: ${{vars.AZURE_LOCATION}}
-      AZURE_CREDS_PROVIDER: "github"
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Update NuGet Package Sources
+      run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
+        
     - name: Install .NET Aspire workload
       run: dotnet workload install aspire --ignore-failed-sources
+
+    - name: Restore NuGet packages
+      run: dotnet restore --configfile ${{env.NUGET_CONF_PATH}}
 
     #- name: Login to ghcr.io
     #  uses: docker/login-action@v3
@@ -44,9 +47,6 @@ jobs:
     #    registry: ${{env.CONTAINER_REGISTRY}}
     #    username: ${{github.actor}}
     #    password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Update nuget credentials
-      run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --store-password-in-clear-text
 
     # Using csproj to set the base image instead
     #- name: Build container with custom base
