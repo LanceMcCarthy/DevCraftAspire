@@ -15,6 +15,7 @@
     <PackageReference Include="Telerik.Drawing.Skia" Version="19.2.25.1001" />
     <PackageReference Include="Telerik.Reporting.OpenXmlRendering" Version="19.2.25.1001" />
     <PackageReference Include="Telerik.Reporting.Services.AspNetCore" Version="19.2.25.1001" />
+    <PackageReference Include="Telerik.WebReportDesigner.Services" Version="19.2.25.1001" />
   </ItemGroup>
 
   <ItemGroup>

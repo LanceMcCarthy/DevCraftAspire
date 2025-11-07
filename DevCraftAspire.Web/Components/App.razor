@@ -2,44 +2,58 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="DevCraftAspire.Web.styles.css" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<base href="/" />
+	<link rel="icon" type="image/png" href="favicon.png" />
+	<link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+	<link rel="stylesheet" href="app.css" />
+	<link rel="stylesheet" href="DevCraftAspire.Web.styles.css" />
 
-    <link href="https://kendo.cdn.telerik.com/themes/7.0.2/default/default-main.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<link href="https://kendo.cdn.telerik.com/themes/7.0.2/default/default-main.css" rel="stylesheet" />
+	<script src="https://kendo.cdn.telerik.com/2025.1.227/js/kendo.all.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    
-    @* Javascript for the ReportViewer *@
-    @if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("services__apiservice__https__0")))
-    {
-        <script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
-    }
-    else
-    {
-        <script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
-    }
+	@*  temperaraly avoiding dynamic resources *@
+	<script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
+	<script src="https://localhost:7443/api/reportdesigner/resources/js/telerikReportViewer"></script>
+	<script src="https://localhost:7443/api/reportdesigner/designerresources/js/webReportDesigner/"></script>
 
-    @* CSS for the ReportViewer *@
-    <style>
-        #rv1 {
-            position: relative;
-            width: 900px;
-            height: 800px;
-        }
-    </style>
+	@* Javascript for the ReportViewer *@
+	@* @if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("services__apiservice__https__0")))
+	{
+		<script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
+		<script src="https://localhost:7443/api/reportdesigner/resources/js/telerikReportViewer"></script>
+		<script src="https://localhost:7443/api/reportdesigner/designerresources/js/webReportDesigner/"></script>
 
-    <HeadOutlet />
+	}
+	else
+	{
+		<script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
+		<script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__1"))/api/reportdesigner/resources/js/telerikReportViewer"></script>
+		<script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__1"))/api/reportdesigner/designerresources/js/webReportDesigner/"></script>
+
+	} *@
+
+	@* CSS for the ReportViewer *@
+	<style>
+		#rv1 {
+			position: relative;
+			width: 900px;
+			height: 800px;
+		}
+	</style>
+
+	<HeadOutlet />
 </head>
 
 <body>
-    <Routes @rendermode="@RenderMode.InteractiveServer" />
-    <script src="_framework/blazor.web.js"></script>
-    <script src="_content/Telerik.ReportViewer.Blazor/interop.js" defer></script>
+	<Routes @rendermode="@RenderMode.InteractiveServer" />
+	<script src="_content/Telerik.WebReportDesigner.Blazor/telerikWebReportDesignerInterop.js" defer></script>
+	<script src="_framework/blazor.web.js"></script>
+	<script src="_content/Telerik.ReportViewer.Blazor/interop.js" defer></script>
+
 </body>
 
 </html>
