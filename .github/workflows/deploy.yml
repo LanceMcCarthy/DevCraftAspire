@@ -18,7 +18,11 @@ jobs:
     name: "Update images for ContainerBaseImage"
     runs-on: ubuntu-latest
     steps:
-    - uses: ./.github/workflows/update-base-image.yml
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Run update-base-image.yml
+      uses: ./.github/workflows/update-base-image.yml
 
   # JOB 2 build and deploy to Azure
   deploy_app:
