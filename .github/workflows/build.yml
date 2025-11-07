@@ -21,10 +21,13 @@ jobs:
     - name: Update NuGet Package Sources
       run: dotnet nuget update source "TelerikServer" -s "https://nuget.telerik.com/v3/index.json" -u 'api-key' -p ${{secrets.TELERIK_NUGET_KEY}} --configfile ${{env.NUGET_CONF_PATH}} --store-password-in-clear-text
 
+      # Installing through scipt because Aspire 13 is not yet released
     - name: Install Aspire 13 preview SDK
       run: |
         curl -sSL https://aspire.dev/install.sh -o install-aspire.sh
         bash install-aspire.sh
+
+    # After v13 is released
     # - name: Install .NET Aspire workload
     #   run: dotnet workload install aspire --ignore-failed-sources
 

@@ -3,24 +3,35 @@ name: "Deploy to Azure"
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
 env:
   NUGET_CONF_PATH: './nuget.config'
   SOLUTION_PATH: './DevCraftAspire.slnx'
-  ASPIRE_ENVIRONMENT: "aspire2b"
-  AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
-  AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
-  AZURE_SUBSCRIPTION_ID: ${{vars.AZURE_SUBSCRIPTION_ID}}
-  AZURE_ENV_NAME: ${{vars.AZURE_ENV_NAME}}
-  AZURE_LOCATION: ${{vars.AZURE_LOCATION}}
-  AZURE_CREDS_PROVIDER: "github"
 
 jobs:
+  # ensures the latest copy of base images are available before deployment
+  update_base_images:
+    runs-on: ubuntu-latest
+    name: "Update images for ContainerBaseImage"
+    steps:
+    - uses: ./.github/workflows/update-base-image.yml
+
   deploy_app:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-      packages: write
+    needs: update_base_images
+    name: "Deploy Application to Azure"
+    env:
+      ASPIRE_ENVIRONMENT: "aspire2b"
+      AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
+      AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
+      AZURE_SUBSCRIPTION_ID: ${{vars.AZURE_SUBSCRIPTION_ID}}
+      AZURE_ENV_NAME: ${{vars.AZURE_ENV_NAME}}
+      AZURE_LOCATION: ${{vars.AZURE_LOCATION}}
+      AZURE_CREDS_PROVIDER: "github"
     steps:
     - name: Checkout
       uses: actions/checkout@v4
