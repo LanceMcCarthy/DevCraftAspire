@@ -4,9 +4,9 @@ A set of projects that test various Telerik and Kendo components in Microsoft's 
 
 ### Build Statuses
 
-| Build | Build and Publish to Azure | Base Image Builds |
-|--------|--------|----------|
-| [![build](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml) | [![deploy](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml) |[![Update Base Image](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/update-base-image.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/update-base-image.yml) |
+| Build | Build and Publish to Azure |
+|--------|--------|
+| [![build](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml) | [![deploy](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml) |
 
 
 ### Project Structure
@@ -14,10 +14,10 @@ A set of projects that test various Telerik and Kendo components in Microsoft's 
 - `DevCraftAspire.ApiService`: Contains the Telerik Reporting REST service.
 - `DevCraftAspire.Web`: A Blazor application, using Telerik UI for Blazor and Telerik Reporting.
 - `DevCraftAspire.ServiceDefaults`: A shared class library the defines all the services used by the front end and backend.
-- `DevCraftAspire.AppHost`: A Blazor application, using Telerik UI for Blazor and Telerik Reporting.
+- `DevCraftAspire.AppHost`: The Aspire apphost project.
 
 > [!IMPORTANT]
-> The ApiService project uses a custom base image `lancemccarthy/aspirebase:9.0`, built by [.dockerbuilds/baseimage90/Dockerfile](https://github.com/LanceMcCarthy/DevCraftAspire/blob/main/.dockerbuilds/baseimage90/Dockerfile). It is simply *mcr.microsoft.com/dotnet/aspnet:9.0* with **libfontconfig1** and **libfreetype6** preinstalled.
+> The ApiService project uses a custom base image `lancemccarthy/aspirebase:9.0`, built by [.dockerbuilds/baseimage90/Dockerfile](https://github.com/LanceMcCarthy/DevCraftAspire/blob/main/.dockerbuilds/baseimage90/Dockerfile). This is simply a copy of *mcr.microsoft.com/dotnet/aspnet:9.0* with **libfontconfig1** and **libfreetype6** preinstalled.
 
 ## Screenshots
 
@@ -36,4 +36,3 @@ The `apiservice` application, DevCraftAspire.Web
 The `seq` service
 
 <img width="900" height="560" alt="image" src="https://github.com/user-attachments/assets/40b46a09-bf9e-4f77-804c-b9decaf9b40d" />
-
