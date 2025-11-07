@@ -21,8 +21,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Run update-base-image.yml
-      uses: ./.github/workflows/update-base-image.yml
+    - name: Run update-base-image action
+      uses: ./.github/workflows/update-base-image
 
   # JOB 2 build and deploy to Azure
   deploy_app:
