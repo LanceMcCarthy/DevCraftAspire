@@ -1,7 +1,7 @@
 ﻿@page "/webreportdesigner"
 
 @using Telerik.WebReportDesigner.Blazor
-
+@* CSS for the ReportDesigner *@
 <style>
     #wrd1 {
         position: relative;
@@ -15,7 +15,7 @@
             ServiceUrl="@ApiServiceUrl"
             Report="BarcodesReport.trdp"
             ReportViewerOptions="@(new ReportViewerOptions() {
-                templateUrl = TemplateString,
+                templateUrl = @$"{TemplateString}",
                 scaleMode = ScaleMode.Specific,
                 scale = 1.0,
                 pageMode = PageMode.ContinuousScroll,

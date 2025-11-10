@@ -1,4 +1,4 @@
-﻿using Telerik.ReportViewer.Blazor;
+﻿using Telerik.WebReportDesigner.Blazor;
 
 namespace DevCraftAspire.Web.Components.Pages
 {
@@ -7,8 +7,6 @@ namespace DevCraftAspire.Web.Components.Pages
         private string? ApiServiceUrl { get; set; }
         private string TemplateString { get; set; } = string.Empty;
 
-
-
         protected override async Task OnInitializedAsync()
         {
             var rootUrl = "";
@@ -16,10 +14,10 @@ namespace DevCraftAspire.Web.Components.Pages
             rootUrl = "https://localhost:7443";
 #elif RELEASE
         // If we are running in Azure, the final URL will be available in this variable
-        rootUrl = Environment.GetEnvironmentVariable("services__apiservice__https__1");
+        rootUrl = Environment.GetEnvironmentVariable("services__apiservice__https__0");
 #endif
             this.ApiServiceUrl = $"{rootUrl}/api/reportdesigner";
-            this.TemplateString = @$"{rootUrl}api/reportdesigner/resources/templates/telerikReportViewerTemplate.html";
+            this.TemplateString = @$"{rootUrl}/api/reportdesigner/resources/templates/telerikReportViewerTemplate.html";
 
             await base.OnInitializedAsync();
         }

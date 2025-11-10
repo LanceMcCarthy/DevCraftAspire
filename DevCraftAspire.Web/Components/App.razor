@@ -10,18 +10,17 @@
 	<link rel="stylesheet" href="app.css" />
 	<link rel="stylesheet" href="DevCraftAspire.Web.styles.css" />
 
-	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-	<link href="https://kendo.cdn.telerik.com/themes/7.0.2/default/default-main.css" rel="stylesheet" />
-	<script src="https://kendo.cdn.telerik.com/2025.1.227/js/kendo.all.min.js"></script>
+	@* Resources needed by the ReportViewer and Designer *@
 	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-	@*  temperaraly avoiding dynamic resources *@
-	<script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
-	<script src="https://localhost:7443/api/reportdesigner/resources/js/telerikReportViewer"></script>
-	<script src="https://localhost:7443/api/reportdesigner/designerresources/js/webReportDesigner/"></script>
-
+	@* Themes for the ReportViewer and Desinger *@
+	<link href="https://kendo.cdn.telerik.com/themes/12.2.3/default/default-main.css" rel="stylesheet" />
+	<script src="/js/kendo.custom.min.js"></script>
+	
 	@* Javascript for the ReportViewer *@
-	@* @if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("services__apiservice__https__0")))
+	
+	@if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("services__apiservice__https__0")))
 	{
 		<script src="https://localhost:7443/reports/resources/js/telerikReportViewer"></script>
 		<script src="https://localhost:7443/api/reportdesigner/resources/js/telerikReportViewer"></script>
@@ -31,19 +30,10 @@
 	else
 	{
 		<script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/reports/resources/js/telerikReportViewer"></script>
-		<script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__1"))/api/reportdesigner/resources/js/telerikReportViewer"></script>
-		<script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__1"))/api/reportdesigner/designerresources/js/webReportDesigner/"></script>
+		<script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/api/reportdesigner/resources/js/telerikReportViewer"></script>
+		<script src="@(Environment.GetEnvironmentVariable("services__apiservice__https__0"))/api/reportdesigner/designerresources/js/webReportDesigner/"></script>
 
-	} *@
-
-	@* CSS for the ReportViewer *@
-	<style>
-		#rv1 {
-			position: relative;
-			width: 900px;
-			height: 800px;
-		}
-	</style>
+	}
 
 	<HeadOutlet />
 </head>
