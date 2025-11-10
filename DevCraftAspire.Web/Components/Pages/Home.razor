@@ -1,7 +1,15 @@
 ﻿@page "/"
-@using Telerik.ReportViewer.Blazor
 @* Important: prerender the ReportViewer *@
-@rendermode InteractiveServer
+@using Telerik.ReportViewer.Blazor
+
+@* CSS for the ReportViewer *@
+<style>
+	#rv1 {
+		position: relative;
+		width: 900px;
+		height: 800px;
+	}
+</style>
 
 <ReportViewer @ref="ReportViewer1"
               ViewerId="rv1"

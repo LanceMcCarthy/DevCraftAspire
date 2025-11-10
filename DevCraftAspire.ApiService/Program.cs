@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Diagnostics;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
+using Telerik.WebReportDesigner.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddControllers(opts => { })
     .AddNewtonsoftJson(opts => { })
     .AddJsonOptions(opts => { });
+builder.Services.AddControllers();
 
 // CORs policy to allow the ReportViewer in the front-end project to use the REST API in a different domain
 builder.Services.AddCors(corsOption => corsOption.AddPolicy("ReportingRestPolicy", corsBuilder => corsBuilder
@@ -42,12 +44,28 @@ builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
     };
 });
 
+builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp => new ReportServiceConfiguration
+{
+    ReportingEngineConfiguration = sp.GetService<IConfiguration>(),
+    HostAppId = "BlazorWebReportDesignerDemo",
+    Storage = new FileStorage(),
+    ReportSourceResolver = new UriReportSourceResolver(Path.Combine(sp.GetService<IWebHostEnvironment>().WebRootPath, "Reports"))
+});
+builder.Services.TryAddSingleton<IReportDesignerServiceConfiguration>(sp => new ReportDesignerServiceConfiguration
+{
+    DefinitionStorage = new FileDefinitionStorage(Path.Combine(sp.GetService<IWebHostEnvironment>().ContentRootPath, "Reports")),
+    SettingsStorage = new FileSettingsStorage(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Telerik Reporting")),
+    ResourceStorage = new ResourceStorage(Path.Combine(sp.GetService<IWebHostEnvironment>().ContentRootPath, "Resources")),
+    SharedDataSourceStorage = new FileSharedDataSourceStorage(Path.Combine(sp.GetService<IWebHostEnvironment>().ContentRootPath, "Reports", "Shared Data Sources")),
+});
+
 var app = builder.Build();
 
 app.UseExceptionHandler();
 
 app.UseStaticFiles();
 app.MapControllers();
+
 app.UseCors("ReportingRestPolicy");
 
 app.MapDefaultEndpoints();
