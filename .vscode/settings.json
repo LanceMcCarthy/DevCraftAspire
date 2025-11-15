@@ -1,0 +1,72 @@
+{
+  // .NET and C# Settings
+  "dotnet.defaultSolution": "DevCraftAspire.sln",
+  "omnisharp.enableEditorConfigSupport": true,
+  "omnisharp.enableRoslynAnalyzers": true,
+  "omnisharp.enableImportCompletion": true,
+  "omnisharp.organizeImportsOnFormat": true,
+
+  // File Associations
+  "files.associations": {
+    "*.razor": "razor",
+    "*.cshtml": "razor"
+  },
+
+  // File Exclusions (for cleaner workspace)
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "**/.vs": true
+  },
+
+  // Search Exclusions
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/bin": true,
+    "**/obj": true
+  },
+
+  // Editor Settings
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+
+  // C# Formatting
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true
+  },
+
+  // Razor Formatting
+  "[razor]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+
+  // JSON Formatting
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.tabSize": 2
+  },
+
+  // Terminal Settings
+  "terminal.integrated.env.osx": {
+    "ASPNETCORE_ENVIRONMENT": "Development"
+  },
+
+  // Aspire Dashboard Settings
+  "aspire.autoOpenDashboard": true,
+
+  // Git Settings
+  "git.ignoreLimitWarning": true,
+
+  // Problems Settings
+  "problems.decorations.enabled": true
+}
