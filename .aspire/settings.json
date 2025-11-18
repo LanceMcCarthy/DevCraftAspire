@@ -1,3 +1,6 @@
 {
-  "appHostPath": "../DevCraftAspire.AppHost/DevCraftAspire.AppHost.csproj"
+  "appHostPath": "../DevCraftAspire.AppHost/DevCraftAspire.AppHost.csproj",
+  "features": {
+    "publishCommandEnabled": "true"
+  }
 }
