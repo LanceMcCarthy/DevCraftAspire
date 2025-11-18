@@ -2,10 +2,6 @@ name: "Build Main"
 on:
   workflow_dispatch:
 
-env:
-  NUGET_CONF_PATH: './nuget.config'
-  SOLUTION_PATH: './DevCraftAspire.slnx'
-
 jobs:
   build_app:
     runs-on: ubuntu-latest
@@ -19,20 +15,20 @@ jobs:
         dotnet-version: '10.0.x'
 
     # Installing through scipt because Aspire 13 is not yet released
-    - name: Install Aspire 13 preview SDK
-      run: |
-        curl -sSL https://aspire.dev/install.sh -o install-aspire.sh
-        bash install-aspire.sh
+    # - name: Install Aspire 13 preview SDK
+    #   run: |
+    #     curl -sSL https://aspire.dev/install.sh -o install-aspire.sh
+    #     bash install-aspire.sh
 
     # After v13 is released
-    # - name: Install .NET Aspire workload
-    #   run: dotnet workload install aspire --ignore-failed-sources
+    - name: Install .NET Aspire workload
+      run: dotnet workload install aspire --ignore-failed-sources
 
     - name: Restore NuGet packages
-      run: dotnet restore ${{env.SOLUTION_PATH}} --configfile ${{env.NUGET_CONF_PATH}}
+      run: dotnet restore './DevCraftAspire.slnx' --configfile './nuget.config'
       env:
         TELERIK_NUGET_KEY: ${{secrets.TELERIK_NUGET_KEY}}
 
 
     - name: Build solution
-      run: dotnet build ${{env.SOLUTION_PATH}} -c Release --no-restore
+      run: dotnet build './DevCraftAspire.slnx' -c Release --no-restore
