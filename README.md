@@ -8,6 +8,11 @@ A set of projects that test various Telerik and Kendo components in Microsoft's 
 |--------|--------|
 | [![build](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml) | [![deploy](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml) |
 
+| Worflow | Status |
+|--------|--------|
+| Build | [![build](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml) |
+| Deploy (Docker and Azure) | [![](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml) |
+| Deploy (Azure Only) | [![](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy-azureonly.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy-azureonly.yml) |
 
 ### Project Structure
 
