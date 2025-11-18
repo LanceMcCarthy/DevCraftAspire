@@ -1,12 +1,8 @@
 # DevCraftAspire
 
-A set of projects that test various Telerik and Kendo components in Microsoft's [Aspire](https://aspire.dev).
+A set of projects that test various Telerik and Kendo components in Microsoft's [Aspire](https://aspire.dev). 
 
 ### Build Statuses
-
-| Build | Build and Publish to Azure |
-|--------|--------|
-| [![build](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml/badge.svg)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/build.yml) | [![deploy](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml/badge.svg?branch=release)](https://github.com/LanceMcCarthy/DevCraftAspire/actions/workflows/deploy.yml) |
 
 | Worflow | Status |
 |--------|--------|
@@ -21,8 +17,8 @@ A set of projects that test various Telerik and Kendo components in Microsoft's 
 - `DevCraftAspire.ServiceDefaults`: A shared class library the defines all the services used by the front end and backend.
 - `DevCraftAspire.AppHost`: The Aspire apphost project.
 
-> [!IMPORTANT]
-> The ApiService project uses a custom base image `lancemccarthy/aspirebase:9.0`, built by [.dockerbuilds/baseimage90/Dockerfile](https://github.com/LanceMcCarthy/DevCraftAspire/blob/main/.dockerbuilds/baseimage90/Dockerfile). This is simply a copy of *mcr.microsoft.com/dotnet/aspnet:9.0* with **libfontconfig1** and **libfreetype6** preinstalled.
+> [!NOTE]
+> The uses a custom base image `lancemccarthy/skia-aspnet:10.0`, built by [LanceMcCarthy/BaseImages](https://github.com/LanceMcCarthy/BaseImages), is simply a copy of *mcr.microsoft.com/dotnet/aspnet:10.0* with **libfontconfig1** and **libfreetype6** preinstalled.
 
 ## Screenshots
 
