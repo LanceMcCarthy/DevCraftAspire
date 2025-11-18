@@ -1,4 +1,4 @@
-name: "Deploy to Azure"
+name: "Deploy (Docker and Azure)"
 on:
   workflow_dispatch:
 
@@ -115,7 +115,7 @@ jobs:
       run: dotnet build ${{env.SOLUTION_PATH}} -c Release --no-restore
       
     - name: Install azd
-      uses: Azure/setup-azd@v1.0.0
+      uses: Azure/setup-azd@v2
 
     - name: Log into Azure with GitHub Federated Credentials (OpenID)
       shell: pwsh
