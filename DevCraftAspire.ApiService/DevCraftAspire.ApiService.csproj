@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ContainerBaseImage>docker.io/lancemccarthy/aspirebase:10.0</ContainerBaseImage>
+    <ContainerBaseImage>docker.io/lancemccarthy/skia-aspnet:10.0</ContainerBaseImage>
   </PropertyGroup>
 
   <ItemGroup>
