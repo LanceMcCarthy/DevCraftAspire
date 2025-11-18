@@ -1,0 +1,65 @@
+name: "Deploy (Azure only)"
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
+jobs:
+  deploy_app:
+    name: "Deploy Application to Azure"
+    runs-on: ubuntu-latest
+    env:
+      NUGET_CONF_PATH: './nuget.config'
+      SOLUTION_PATH: './DevCraftAspire.slnx'
+      REPOSITORY: "lancemccarthy/aspirebase"
+      ASPIRE_ENVIRONMENT: "aspire2b"
+      AZURE_CLIENT_ID: ${{vars.AZURE_CLIENT_ID}}
+      AZURE_TENANT_ID: ${{vars.AZURE_TENANT_ID}}
+      AZURE_SUBSCRIPTION_ID: ${{vars.AZURE_SUBSCRIPTION_ID}}
+      AZURE_ENV_NAME: ${{vars.AZURE_ENV_NAME}}
+      AZURE_LOCATION: ${{vars.AZURE_LOCATION}}
+      AZURE_CREDS_PROVIDER: "github"
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: '10.0.x'
+
+    # Installing through scipt because Aspire 13 is not yet released
+    # - name: Install Aspire 13 preview SDK
+    #   run: |
+    #     curl -sSL https://aspire.dev/install.sh -o install-aspire.sh
+    #     bash install-aspire.sh
+
+    # After v13 is released
+    - name: Install .NET Aspire workload
+      run: dotnet workload install aspire --ignore-failed-sources
+
+    - name: Restore NuGet packages
+      run: dotnet restore ${{env.SOLUTION_PATH}} --configfile ${{env.NUGET_CONF_PATH}}
+      env:
+        TELERIK_NUGET_KEY: ${{secrets.TELERIK_NUGET_KEY}}
+
+    - name: Build solution
+      run: dotnet build ${{env.SOLUTION_PATH}} -c Release --no-restore
+      
+    - name: Install azd
+      uses: Azure/setup-azd@v2
+
+    - name: Log into Azure with GitHub Federated Credentials (OpenID)
+      shell: pwsh
+      run: azd auth login --client-id "${{env.AZURE_CLIENT_ID}}" --tenant-id "${{env.AZURE_TENANT_ID}}" --federated-credential-provider "${{env.AZURE_CREDS_PROVIDER}}"
+
+    - name: Provision Infrastructure
+      shell: pwsh
+      run: azd provision --no-prompt --environment "${{env.ASPIRE_ENVIRONMENT}}"
+
+    - name: Deploy Application
+      shell: pwsh
+      run: azd deploy --all --no-prompt --environment "${{env.ASPIRE_ENVIRONMENT}}"
