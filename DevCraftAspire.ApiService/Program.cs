@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Diagnostics;
 using Telerik.Reporting.Cache.File;
 using Telerik.Reporting.Services;
 using Telerik.WebReportDesigner.Services;
@@ -44,19 +43,37 @@ builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
     };
 });
 
-builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp => new ReportServiceConfiguration
+builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp =>
 {
-    ReportingEngineConfiguration = sp.GetService<IConfiguration>(),
-    HostAppId = "BlazorWebReportDesignerDemo",
-    Storage = new FileStorage(),
-    ReportSourceResolver = new UriReportSourceResolver(Path.Combine(sp.GetService<IWebHostEnvironment>().WebRootPath, "Reports"))
+    var rootPath = sp.GetService<IWebHostEnvironment>()?.ContentRootPath;
+
+    if (string.IsNullOrEmpty(rootPath))
+        rootPath = "./";
+
+    return new ReportServiceConfiguration
+    {
+        ReportingEngineConfiguration = sp.GetService<IConfiguration>(),
+        HostAppId = "BlazorWebReportDesignerDemo",
+        Storage = new FileStorage(),
+        ReportSourceResolver = new UriReportSourceResolver(Path.Combine(rootPath, "Reports"))
+    };
 });
-builder.Services.TryAddSingleton<IReportDesignerServiceConfiguration>(sp => new ReportDesignerServiceConfiguration
+
+
+builder.Services.TryAddSingleton<IReportDesignerServiceConfiguration>(sp =>
 {
-    DefinitionStorage = new FileDefinitionStorage(Path.Combine(sp.GetService<IWebHostEnvironment>().ContentRootPath, "Reports")),
-    SettingsStorage = new FileSettingsStorage(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Telerik Reporting")),
-    ResourceStorage = new ResourceStorage(Path.Combine(sp.GetService<IWebHostEnvironment>().ContentRootPath, "Resources")),
-    SharedDataSourceStorage = new FileSharedDataSourceStorage(Path.Combine(sp.GetService<IWebHostEnvironment>().ContentRootPath, "Reports", "Shared Data Sources")),
+    var rootPath = sp.GetService<IWebHostEnvironment>()?.ContentRootPath;
+
+    if (string.IsNullOrEmpty(rootPath))
+        rootPath = "./";
+
+    return new ReportDesignerServiceConfiguration
+    {
+        DefinitionStorage = new FileDefinitionStorage(Path.Combine(rootPath, "Reports")),
+        SettingsStorage = new FileSettingsStorage(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Telerik Reporting")),
+        ResourceStorage = new ResourceStorage(Path.Combine(rootPath, "Resources")),
+        SharedDataSourceStorage = new FileSharedDataSourceStorage(Path.Combine(rootPath, "Reports", "Shared Data Sources")),
+    };
 });
 
 var app = builder.Build();
